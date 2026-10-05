@@ -1,7 +1,13 @@
 import React from 'react';
-import { Keyboard, Sun, Moon, Monitor, FileText } from 'lucide-react';
+import { Sun, Moon } from 'lucide-react';
 
-export default function Header({ mode, setMode, isDarkMode, setIsDarkMode }) {
+export default function Header({
+  sampleTasks,
+  selectedTask,
+  onSelectTask,
+  isDarkMode,
+  setIsDarkMode
+}) {
   return (
     <header className="app-header">
       <div className="header-container">
@@ -9,31 +15,34 @@ export default function Header({ mode, setMode, isDarkMode, setIsDarkMode }) {
           <span className="logo-icon">⌨️</span>
           <div>
             <h1 className="app-title">TypeYell（タイプエール）</h1>
-            <p className="app-subtitle">就労移行支援向け タイピング訓練 ＆ 支援分析システム</p>
+            <p className="app-subtitle">就労移行支援向け タイピング訓練 ＆ 記憶・入力分析システム</p>
           </div>
         </div>
+
         <div className="header-controls">
-          <div className="mode-toggle-group">
-            <span className="control-label">訓練モード:</span>
-            <button
-              className={`btn-mode ${mode === 'screen' ? 'active' : ''}`}
-              onClick={() => setMode('screen')}
-              title="画面上で正解文を見ながら入力します"
+          {/* 練習問題の選択（ヘッダーに配置） */}
+          <div className="header-sample-select">
+            <label htmlFor="header-task-select" className="header-select-label">
+              課題:
+            </label>
+            <select
+              id="header-task-select"
+              className="form-control header-select-control"
+              value={selectedTask.id}
+              onChange={(e) => onSelectTask(e.target.value)}
             >
-              <Monitor size={15} style={{ marginRight: 4 }} />
-              画面見本モード
-            </button>
-            <button
-              className={`btn-mode ${mode === 'paper' ? 'active' : ''}`}
-              onClick={() => setMode('paper')}
-              title="手元の紙を見ながら入力します（見本非表示）"
-            >
-              <FileText size={15} style={{ marginRight: 4 }} />
-              紙課題モード
-            </button>
+              {sampleTasks.map((task) => (
+                <option key={task.id} value={task.id}>
+                  {task.title}（{task.content.length}文字）
+                </option>
+              ))}
+            </select>
           </div>
+
+          {/* ダークモード/表示モード切替 */}
           <div className="theme-toggle">
             <button
+              type="button"
               className="btn-secondary"
               onClick={() => setIsDarkMode(!isDarkMode)}
               title="ダークモード/ハイコントラスト切替"

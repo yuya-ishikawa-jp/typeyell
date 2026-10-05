@@ -1,28 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Header from './components/Header';
-import SampleSelector from './components/SampleSelector';
+import TaskInfoBar from './components/TaskInfoBar';
 import WordToolbar from './components/WordToolbar';
-import StatusBar from './components/StatusBar';
 import ReportModal from './components/ReportModal';
+import SampleModal from './components/SampleModal';
 import { SAMPLE_TASKS } from './data/sampleTasks';
 import { computeTextDiff, generateInsights } from './utils/diffEngine';
 
 export default function App() {
   const [selectedTask, setSelectedTask] = useState(SAMPLE_TASKS[0]);
-  const [mode, setMode] = useState('screen'); // 'screen' | 'paper'
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [sampleVisible, setSampleVisible] = useState(true);
+  const [isSampleModalOpen, setIsSampleModalOpen] = useState(false);
 
-  // タイマー ＆ 入力ステート
+  // バックグラウンド計測ステート
   const [isRunning, setIsRunning] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [backspaceCount, setBackspaceCount] = useState(0);
   const [backspaceLogs, setBackspaceLogs] = useState([]);
-  const [typedCharCount, setTypedCharCount] = useState(0);
 
   // 分析結果 ＆ モーダル
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [resultData, setResultData] = useState(null);
 
   const editorRef = useRef(null);
@@ -53,9 +50,9 @@ export default function App() {
     return editorRef.current.innerText || editorRef.current.textContent || '';
   };
 
-  // タイマー更新
+  // バックグラウンドタイマー更新
   useEffect(() => {
-    if (isRunning && !isPaused) {
+    if (isRunning) {
       timerRef.current = setInterval(() => {
         setElapsedSeconds(Math.floor((Date.now() - startTimeRef.current) / 1000));
       }, 1000);
@@ -63,55 +60,36 @@ export default function App() {
       clearInterval(timerRef.current);
     }
     return () => clearInterval(timerRef.current);
-  }, [isRunning, isPaused]);
+  }, [isRunning]);
 
-  // 訓練コントロール
+  // 訓練スタート
   const startTraining = () => {
-    if (isRunning && !isPaused) return;
-
-    if (!isRunning) {
-      setIsRunning(true);
-      setIsPaused(false);
-      setElapsedSeconds(0);
-      setBackspaceCount(0);
-      setBackspaceLogs([]);
-      setTypedCharCount(0);
-      startTimeRef.current = Date.now();
-      if (editorRef.current) {
-        editorRef.current.innerHTML = '';
-      }
-    } else if (isPaused) {
-      setIsPaused(false);
-      startTimeRef.current = Date.now() - elapsedSeconds * 1000;
-    }
-
-    setTimeout(() => {
-      if (editorRef.current) {
+    setIsRunning(true);
+    setElapsedSeconds(0);
+    setBackspaceCount(0);
+    setBackspaceLogs([]);
+    startTimeRef.current = Date.now();
+    if (editorRef.current) {
+      editorRef.current.innerHTML = '';
+      setTimeout(() => {
         editorRef.current.focus();
-      }
-    }, 50);
-  };
-
-  const pauseTraining = () => {
-    if (!isRunning || isPaused) return;
-    setIsPaused(true);
+      }, 50);
+    }
   };
 
   const resetTraining = () => {
     setIsRunning(false);
-    setIsPaused(false);
     setElapsedSeconds(0);
     setBackspaceCount(0);
     setBackspaceLogs([]);
-    setTypedCharCount(0);
     if (editorRef.current) {
       editorRef.current.innerHTML = '';
     }
   };
 
-  // 入力＆キー入力ハンドラ
+  // キー入力ハンドラ
   const handleKeyDown = (e) => {
-    if (!isRunning || isPaused) {
+    if (!isRunning) {
       if (e.key !== 'Tab') e.preventDefault();
       return;
     }
@@ -125,20 +103,14 @@ export default function App() {
     }
   };
 
-  const handleInput = () => {
-    if (!isRunning || isPaused) return;
-    const text = getPlainText();
-    setTypedCharCount(text.length);
-  };
-
   // 完了・分析
   const handleFinishAndCheck = () => {
-    if (elapsedSeconds === 0) {
-      alert('タイピングが開始されていません。');
+    if (!isRunning || elapsedSeconds === 0) {
+      alert('タイピングが開始されていません。「▶ 訓練スタート」を押して入力してください。');
       return;
     }
 
-    pauseTraining();
+    setIsRunning(false);
 
     const typedText = getPlainText();
     const targetText = selectedTask.content;
@@ -170,54 +142,33 @@ export default function App() {
       errEnd
     });
 
-    setIsModalOpen(true);
+    setIsReportModalOpen(true);
   };
 
   return (
     <div className="app-root">
+      {/* ヘッダー */}
       <Header
-        mode={mode}
-        setMode={setMode}
+        sampleTasks={SAMPLE_TASKS}
+        selectedTask={selectedTask}
+        onSelectTask={handleSelectTask}
         isDarkMode={isDarkMode}
         setIsDarkMode={setIsDarkMode}
       />
 
       <main className="main-content">
-        {/* 課題選択 */}
-        <SampleSelector
-          sampleTasks={SAMPLE_TASKS}
-          selectedTask={selectedTask}
-          onSelectTask={handleSelectTask}
+        {/* 課題情報バー ＆ 見本確認ダイアログボタン */}
+        <TaskInfoBar
+          task={selectedTask}
+          onOpenSampleModal={() => setIsSampleModalOpen(true)}
         />
-
-        {/* 課題文表示 (画面見本モード時) */}
-        {mode === 'screen' && (
-          <section className="card sample-display-card">
-            <div className="card-header">
-              <h2>📄 練習見本テキスト</h2>
-              <button
-                className="btn-text"
-                onClick={() => setSampleVisible(!sampleVisible)}
-              >
-                {sampleVisible ? '👁️ 非表示にする' : '👁️ 表示する'}
-              </button>
-            </div>
-            <div className="card-body">
-              {sampleVisible && (
-                <div className="sample-text-box">
-                  {selectedTask.content}
-                </div>
-              )}
-            </div>
-          </section>
-        )}
 
         {/* Word風タイピングエディタ */}
         <section className="card editor-card">
           <div className="card-header editor-header">
-            <h2>✍️ 2. タイピング入力（Word操作練習対応）</h2>
+            <h2>✍️ タイピング入力領域（Word操作対応）</h2>
             <span className="tip-text">
-              💡 装飾（文字サイズ・色）を変えても文字の正誤判定には影響しません
+              💡 文字サイズや色の装飾を行っても正誤判定には影響しません
             </span>
           </div>
 
@@ -225,58 +176,38 @@ export default function App() {
           <WordToolbar editorRef={editorRef} />
 
           {/* エディタ本体 */}
-          <div className="editor-wrapper">
+          <div className="editor-wrapper tall-editor-wrapper">
             <div
               ref={editorRef}
-              className="editor-content"
-              contentEditable={isRunning && !isPaused}
+              className="editor-content tall-editor-content"
+              contentEditable={isRunning}
               onKeyDown={handleKeyDown}
-              onInput={handleInput}
-              placeholder="「スタート」を押すとここに入力できます..."
+              placeholder="「▶ 訓練スタート」を押して記憶した文章を入力してください..."
               suppressContentEditableWarning={true}
             ></div>
 
-            {(!isRunning || isPaused) && (
+            {!isRunning && (
               <div className="editor-overlay">
-                <p>
-                  {!isRunning
-                    ? '「▶ 訓練スタート」を押すと入力が開始できます'
-                    : '⏸️ 一時停止中（「スタート」で再開）'}
-                </p>
+                <p>「▶ 訓練スタート」を押すと入力が開始できます</p>
               </div>
             )}
           </div>
 
-          {/* ステータスバー */}
-          <StatusBar
-            elapsedSeconds={elapsedSeconds}
-            typedCharCount={typedCharCount}
-            backspaceCount={backspaceCount}
-          />
-
-          {/* アクションボタン */}
+          {/* アクションボタン（シンプル構成：スタート ＆ 完了チェック） */}
           <div className="action-bar">
             <button
-              className="btn btn-primary"
+              type="button"
+              className="btn btn-primary btn-lg"
               onClick={startTraining}
-              disabled={isRunning && !isPaused}
+              disabled={isRunning}
             >
               ▶ 訓練スタート
             </button>
             <button
-              className="btn btn-secondary"
-              onClick={pauseTraining}
-              disabled={!isRunning || isPaused}
-            >
-              ⏸️ 一時停止
-            </button>
-            <button className="btn btn-outline" onClick={resetTraining}>
-              🔄 リセット
-            </button>
-            <button
-              className="btn btn-success"
+              type="button"
+              className="btn btn-success btn-lg"
               onClick={handleFinishAndCheck}
-              disabled={!isRunning && elapsedSeconds === 0}
+              disabled={!isRunning}
             >
               ✅ 完了＆チェック・結果を見る
             </button>
@@ -284,10 +215,17 @@ export default function App() {
         </section>
       </main>
 
+      {/* 練習テキスト記憶ダイアログ */}
+      <SampleModal
+        isOpen={isSampleModalOpen}
+        onClose={() => setIsSampleModalOpen(false)}
+        task={selectedTask}
+      />
+
       {/* 分析・レポートモーダル */}
       <ReportModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
         resultData={resultData}
       />
     </div>

@@ -75,7 +75,7 @@ export default function WordToolbar({ editorRef }) {
         </label>
         <button
           type="button"
-          className="tool-btn"
+          className="tool-btn tool-btn-wide"
           onClick={() => execCmd('removeFormat')}
           title="書式をクリア"
         >
