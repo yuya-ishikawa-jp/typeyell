@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>就労移行支援向け タイピング訓練・分析支援システム</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- アプリケーションヘッダー -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo-area">
+        <span class="logo-icon">⌨️</span>
+        <div>
+          <h1 class="app-title">タイピング訓練 ＆ 支援分析ツール</h1>
+          <p class="app-subtitle">就労移行支援事業所 業務効率化・個別に寄り添うフィードバックシステム</p>
+        </div>
+      </div>
+      <div class="header-controls">
+        <!-- 画面モード切り替え -->
+        <div class="mode-toggle-group">
+          <span class="control-label">訓練モード:</span>
+          <button id="btn-mode-screen" class="btn-mode active" title="画面上で正解文を見ながら入力します">💻 画面見本モード</button>
+          <button id="btn-mode-paper" class="btn-mode" title="手元の紙を見ながら入力します（見本を非表示）">📄 紙課題モード</button>
+        </div>
+        <!-- アクセシビリティ調整 -->
+        <div class="theme-toggle">
+          <button id="btn-theme-toggle" class="btn-secondary" title="ハイコントラスト/ダークモード切替">🌓 表示モード</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <!-- 課題選択・設定エリア -->
+    <section class="card sample-select-card">
+      <div class="card-header">
+        <h2>📋 1. 練習課題の選択</h2>
+        <span class="badge" id="sample-badge">難易度: 標準</span>
+      </div>
+      <div class="card-body sample-controls">
+        <div class="form-group flex-grow">
+          <label for="sample-select">課題パターンを選択してください:</label>
+          <select id="sample-select" class="form-control">
+            <!-- JavaScriptで動的生成 -->
+          </select>
+        </div>
+        <div class="sample-meta">
+          <span class="meta-item">文字数: <strong id="sample-char-count">0</strong>文字</span>
+          <span class="meta-item">想定時間: <strong id="sample-estimated-time">--</strong>分</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 課題文表示エリア（画面見本モード時に表示） -->
+    <section id="sample-display-section" class="card sample-display-card">
+      <div class="card-header">
+        <h2>📄 練習見本テキスト</h2>
+        <button id="btn-toggle-sample-vis" class="btn-text">👁️ 非表示にする</button>
+      </div>
+      <div class="card-body">
+        <div id="sample-text-content" class="sample-text-box">
+          <!-- 見本テキストがここに挿入されます -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 入力・Word風ツールバーエリア -->
+    <section class="card editor-card">
+      <div class="card-header editor-header">
+        <h2>✍️ 2. タイピング入力（Word操作練習対応）</h2>
+        <span class="tip-text">💡 装飾（文字サイズ・色）を変えても文字の正誤判定には影響しません</span>
+      </div>
+
+      <!-- Word風リッチテキスト装飾ツールバー -->
+      <div class="word-toolbar" role="toolbar" aria-label="Word書式設定ツールバー">
+        <div class="toolbar-group">
+          <span class="toolbar-label">文字サイズ:</span>
+          <select id="tool-font-size" class="tool-select" title="文字サイズ変更">
+            <option value="3">標準 (16px)</option>
+            <option value="4">やや大 (18px)</option>
+            <option value="5">大 (24px)</option>
+            <option value="6">特大 (32px)</option>
+          </select>
+        </div>
+
+        <div class="toolbar-divider"></div>
+
+        <div class="toolbar-group">
+          <button id="tool-bold" class="tool-btn" title="太字 (B)"><strong>B</strong></button>
+          <button id="tool-italic" class="tool-btn" title="斜体 (I)"><em>I</em></button>
+          <button id="tool-underline" class="tool-btn" title="下線 (U)"><u>U</u></button>
+        </div>
+
+        <div class="toolbar-divider"></div>
+
+        <div class="toolbar-group">
+          <label for="tool-color" class="tool-btn-color" title="文字色変更">
+            <span class="color-icon">A</span>
+            <input type="color" id="tool-color" value="#1e293b">
+          </label>
+          <label for="tool-bg-color" class="tool-btn-color" title="背景色（ハイライト）">
+            <span class="color-icon highlight">🖍️</span>
+            <input type="color" id="tool-bg-color" value="#fef08a">
+          </label>
+          <button id="tool-clear" class="tool-btn" title="書式をクリア">🧹 クリア</button>
+        </div>
+      </div>
+
+      <!-- エディタ本体 & 状態オーバーレイ -->
+      <div class="editor-wrapper">
+        <div id="editor" class="editor-content" contenteditable="true" placeholder="「訓練スタート」を押してここに入力してください..."></div>
+        <div id="editor-overlay" class="editor-overlay">
+          <p>「▶ 訓練スタート」を押すと入力が開始できます</p>
+        </div>
+      </div>
+
+      <!-- リアルタイム計測ステータスバー -->
+      <div class="status-bar">
+        <div class="status-item">
+          <span class="status-icon">⏱️</span>
+          <span class="status-label">経過時間:</span>
+          <span id="stat-time" class="status-value">00:00</span>
+        </div>
+        <div class="status-item">
+          <span class="status-icon">📝</span>
+          <span class="status-label">入力文字数:</span>
+          <span id="stat-chars" class="status-value">0</span>
+        </div>
+        <div class="status-item">
+          <span class="status-icon">⚡</span>
+          <span class="status-label">入力速度 (CPM):</span>
+          <span id="stat-cpm" class="status-value">0 <small>文字/分</small></span>
+        </div>
+        <div class="status-item highlight-stat">
+          <span class="status-icon">⌫</span>
+          <span class="status-label">Backspace (修正):</span>
+          <span id="stat-backspace" class="status-value">0 <small>回</small></span>
+        </div>
+      </div>
+
+      <!-- 操作ボタンバー -->
+      <div class="action-bar">
+        <button id="btn-start" class="btn btn-primary">▶ 訓練スタート</button>
+        <button id="btn-pause" class="btn btn-secondary" disabled>⏸️ 一時停止</button>
+        <button id="btn-reset" class="btn btn-outline">🔄 リセット</button>
+        <button id="btn-check" class="btn btn-success" disabled>✅ 完了＆チェック・結果を見る</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- 結果 ＆ フィードバックモーダル -->
+  <div id="result-modal" class="modal-backdrop hidden">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div>
+          <h2>📊 タイピング訓練 成果・分析レポート</h2>
+          <p class="modal-date" id="result-date"></p>
+        </div>
+        <div class="modal-actions-top">
+          <button id="btn-print" class="btn btn-outline btn-sm">🖨️ レポート印刷 / PDF化</button>
+          <button id="btn-close-modal" class="btn-close">×</button>
+        </div>
+      </div>
+
+      <div class="modal-body" id="printable-report">
+        <!-- レポートヘッダー情報（印刷時に表示） -->
+        <div class="print-only print-header">
+          <h1>就労移行支援 タイピング訓練フィードバックシート</h1>
+          <div class="print-meta">
+            <span>実施日時: <span id="print-date"></span></span>
+            <span>課題名: <span id="print-task-name"></span></span>
+          </div>
+        </div>
+
+        <!-- 総合スコアカード群 -->
+        <div class="score-grid">
+          <div class="score-card accent-blue">
+            <span class="score-title">総合正確率</span>
+            <span id="res-accuracy" class="score-number">0%</span>
+            <span class="score-sub" id="res-accuracy-detail">誤字: 0 / 脱字: 0</span>
+          </div>
+          <div class="score-card accent-green">
+            <span class="score-title">タイピング速度</span>
+            <span id="res-cpm" class="score-number">0</span>
+            <span class="score-sub">文字/分 (CPM)</span>
+          </div>
+          <div class="score-card accent-purple">
+            <span class="score-title">所要時間</span>
+            <span id="res-time" class="score-number">00:00</span>
+            <span class="score-sub" id="res-char-total">総文字数: 0文字</span>
+          </div>
+          <div class="score-card accent-orange">
+            <span class="score-title">Backspace修正</span>
+            <span id="res-backspace" class="score-number">0回</span>
+            <span class="score-sub" id="res-backspace-rate">100文字あたり 0回</span>
+          </div>
+        </div>
+
+        <!-- AI/分析エンジンによる自動所見・アドバイス -->
+        <div class="insight-box">
+          <div class="insight-header">
+            <span class="insight-icon">🔍</span>
+            <h3>データ分析から得られた傾向とフィードバック</h3>
+          </div>
+          <ul id="insight-list" class="insight-list">
+            <!-- JSで動的に追加されます -->
+          </ul>
+        </div>
+
+        <!-- 分析グラフエリア -->
+        <div class="charts-grid">
+          <div class="chart-card">
+            <h4>📍 文章の位置ごとの誤り率分布（序盤・中盤・終盤）</h4>
+            <div class="chart-container">
+              <canvas id="chart-error-distribution"></canvas>
+            </div>
+            <p class="chart-desc">※誤りが「最初」「途中」「最後」のどこに多いか可視化します。</p>
+          </div>
+          <div class="chart-card">
+            <h4>⏱️ 時間経過とBackspace（修正）回数の推移</h4>
+            <div class="chart-container">
+              <canvas id="chart-backspace-timeline"></canvas>
+            </div>
+            <p class="chart-desc">※入力中にどのようなタイミングで迷いや修正が発生したかを示します。</p>
+          </div>
+        </div>
+
+        <!-- 差分チェック・正誤比較エリア -->
+        <div class="diff-section">
+          <h3>🔍 誤り箇所の比較チェック</h3>
+          <div class="diff-legend">
+            <span class="legend-item legend-correct">一致</span>
+            <span class="legend-item legend-typo">誤字・違い</span>
+            <span class="legend-item legend-missing">脱字（入力漏れ）</span>
+            <span class="legend-item legend-extra">挿入（不要な入力）</span>
+          </div>
+          <div id="diff-container" class="diff-box">
+            <!-- 差分ハイライトテキストがここに表示されます -->
+          </div>
+        </div>
+
+        <!-- 振り返り＆支援員フィードバック欄 -->
+        <div class="feedback-forms">
+          <div class="form-group">
+            <label for="trainee-notes">🙋 利用者本人の振り返り・感想メモ:</label>
+            <textarea id="trainee-notes" class="form-control" rows="3" placeholder="（例：序盤で慌ててしまい誤字が増えてしまった。次は落ち着いて確認しながら入力したい。）"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="staff-notes">👨‍🏫 支援員からのメッセージ・アドバイス:</label>
+            <textarea id="staff-notes" class="form-control" rows="3" placeholder="（例：中盤以降はペースが安定していました！最初の数行を打ち始める前に一度文章全体を眺める練習をしてみましょう。）"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="btn-save-feedback" class="btn btn-primary">💾 レポート内容を確定・保存</button>
+        <button id="btn-modal-close-bottom" class="btn btn-secondary">閉じる</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main JavaScript -->
+  <script src="app.js"></script>
+</body>
+</html>
