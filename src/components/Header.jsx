@@ -8,7 +8,7 @@ export default function Header({ mode, setMode, isDarkMode, setIsDarkMode }) {
         <div className="logo-area">
           <span className="logo-icon">⌨️</span>
           <div>
-            <h1 class="app-title">TypeStep（タイプステップ）</h1>
+            <h1 className="app-title">TypeYell（タイプエール）</h1>
             <p className="app-subtitle">就労移行支援向け タイピング訓練 ＆ 支援分析システム</p>
           </div>
         </div>

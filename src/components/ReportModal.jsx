@@ -138,7 +138,7 @@ export default function ReportModal({ isOpen, onClose, resultData }) {
         <div className="modal-body" id="printable-report">
           {/* 印刷時専用ヘッダー */}
           <div className="print-only print-header">
-            <h1>TypeStep 就労移行支援 タイピング訓練フィードバックシート</h1>
+            <h1>TypeYell 就労移行支援 タイピング訓練フィードバックシート</h1>
             <div className="print-meta">
               <span>実施日時: {dateStr}</span>
               <span>課題名: {task.title}</span>
