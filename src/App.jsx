@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Header from './components/Header';
-import TaskInfoBar from './components/TaskInfoBar';
-import WordToolbar from './components/WordToolbar';
-import ReportModal from './components/ReportModal';
-import SampleModal from './components/SampleModal';
-import { SAMPLE_TASKS } from './data/sampleTasks';
-import { computeTextDiff, generateInsights } from './utils/diffEngine';
+import React, { useState, useEffect, useRef } from "react";
+import Header from "./components/Header";
+import TaskInfoBar from "./components/TaskInfoBar";
+import WordToolbar from "./components/WordToolbar";
+import ReportModal from "./components/ReportModal";
+import SampleModal from "./components/SampleModal";
+import { SAMPLE_TASKS } from "./data/sampleTasks";
+import { computeTextDiff, generateInsights } from "./utils/diffEngine";
 
 export default function App() {
   const [selectedTask, setSelectedTask] = useState(SAMPLE_TASKS[0]);
@@ -29,9 +29,9 @@ export default function App() {
   // ダークモード適用
   useEffect(() => {
     if (isDarkMode) {
-      document.body.classList.add('dark-mode');
+      document.body.classList.add("dark-mode");
     } else {
-      document.body.classList.remove('dark-mode');
+      document.body.classList.remove("dark-mode");
     }
   }, [isDarkMode]);
 
@@ -46,15 +46,17 @@ export default function App() {
 
   // プレーンテキスト抽出
   const getPlainText = () => {
-    if (!editorRef.current) return '';
-    return editorRef.current.innerText || editorRef.current.textContent || '';
+    if (!editorRef.current) return "";
+    return editorRef.current.innerText || editorRef.current.textContent || "";
   };
 
   // バックグラウンドタイマー更新
   useEffect(() => {
     if (isRunning) {
       timerRef.current = setInterval(() => {
-        setElapsedSeconds(Math.floor((Date.now() - startTimeRef.current) / 1000));
+        setElapsedSeconds(
+          Math.floor((Date.now() - startTimeRef.current) / 1000),
+        );
       }, 1000);
     } else {
       clearInterval(timerRef.current);
@@ -70,7 +72,7 @@ export default function App() {
     setBackspaceLogs([]);
     startTimeRef.current = Date.now();
     if (editorRef.current) {
-      editorRef.current.innerHTML = '';
+      editorRef.current.innerHTML = "";
       setTimeout(() => {
         editorRef.current.focus();
       }, 50);
@@ -83,22 +85,22 @@ export default function App() {
     setBackspaceCount(0);
     setBackspaceLogs([]);
     if (editorRef.current) {
-      editorRef.current.innerHTML = '';
+      editorRef.current.innerHTML = "";
     }
   };
 
   // キー入力ハンドラ
   const handleKeyDown = (e) => {
     if (!isRunning) {
-      if (e.key !== 'Tab') e.preventDefault();
+      if (e.key !== "Tab") e.preventDefault();
       return;
     }
 
-    if (e.key === 'Backspace') {
+    if (e.key === "Backspace") {
       setBackspaceCount((prev) => prev + 1);
       setBackspaceLogs((prev) => [
         ...prev,
-        { timestamp: elapsedSeconds, count: backspaceCount + 1 }
+        { timestamp: elapsedSeconds, count: backspaceCount + 1 },
       ]);
     }
   };
@@ -106,7 +108,9 @@ export default function App() {
   // 完了・分析
   const handleFinishAndCheck = () => {
     if (!isRunning || elapsedSeconds === 0) {
-      alert('タイピングが開始されていません。「▶ 訓練スタート」を押して入力してください。');
+      alert(
+        "タイピングが開始されていません。「▶ 訓練スタート」を押して入力してください。",
+      );
       return;
     }
 
@@ -118,7 +122,10 @@ export default function App() {
     const diff = computeTextDiff(targetText, typedText);
     const minutes = elapsedSeconds / 60;
     const cpm = minutes > 0 ? Math.round(typedText.length / minutes) : 0;
-    const bsRate = typedText.length > 0 ? ((backspaceCount / typedText.length) * 100).toFixed(1) : 0;
+    const bsRate =
+      typedText.length > 0
+        ? ((backspaceCount / typedText.length) * 100).toFixed(1)
+        : 0;
 
     const { insights, errStart, errMid, errEnd } = generateInsights(
       diff,
@@ -126,7 +133,7 @@ export default function App() {
       typedText,
       cpm,
       bsRate,
-      backspaceCount
+      backspaceCount,
     );
 
     setResultData({
@@ -139,7 +146,7 @@ export default function App() {
       insights,
       errStart,
       errMid,
-      errEnd
+      errEnd,
     });
 
     setIsReportModalOpen(true);
@@ -166,7 +173,7 @@ export default function App() {
         {/* Word風タイピングエディタ */}
         <section className="card editor-card">
           <div className="card-header editor-header">
-            <h2>✍️ タイピング入力領域（Word操作対応）</h2>
+            <h2>✍️ タイピング入力領域</h2>
             <span className="tip-text">
               💡 文字サイズや色の装飾を行っても正誤判定には影響しません
             </span>

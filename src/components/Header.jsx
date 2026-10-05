@@ -14,20 +14,21 @@ export default function Header({
         <div className="logo-area">
           <span className="logo-icon">⌨️</span>
           <div>
+            <span className="brand-badge">オカヤマエール 就労移行支援</span>
             <h1 className="app-title">TypeYell（タイプエール）</h1>
-            <p className="app-subtitle">就労移行支援向け タイピング訓練 ＆ 記憶・入力分析システム</p>
+            <p className="app-subtitle">あなたの「働きたい」にエールを。タイピング訓練 ＆ 記憶・分析システム</p>
           </div>
         </div>
 
         <div className="header-controls">
-          {/* 練習問題の選択（ヘッダーに配置） */}
+          {/* 練習問題の選択 */}
           <div className="header-sample-select">
             <label htmlFor="header-task-select" className="header-select-label">
-              課題:
+              練習課題:
             </label>
             <select
               id="header-task-select"
-              className="form-control header-select-control"
+              className="header-select-control"
               value={selectedTask.id}
               onChange={(e) => onSelectTask(e.target.value)}
             >
@@ -39,7 +40,7 @@ export default function Header({
             </select>
           </div>
 
-          {/* ダークモード/表示モード切替 */}
+          {/* 表示モード切替 */}
           <div className="theme-toggle">
             <button
               type="button"
