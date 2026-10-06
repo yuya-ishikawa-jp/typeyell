@@ -933,10 +933,6 @@ body.dark-mode .insight-box {
   background-color: #ffedd5;
   color: #9a3412;
 }
-.legend-extra {
-  background-color: #f3e8ff;
-  color: #6b21a8;
-}
 
 .diff-side-by-side-container {
   display: grid;
@@ -1040,7 +1036,8 @@ body.dark-mode .insight-box {
 .diff-char-missing {
   background-color: #ffedd5;
   color: #9a3412;
-  border-bottom: 2px dashed #ea580c;
+  border-bottom: none;
+  text-decoration: none;
   padding: 0.1rem 0.3rem;
   border-radius: 3px;
   font-weight: 800;
@@ -1048,12 +1045,12 @@ body.dark-mode .insight-box {
 }
 
 .diff-char-extra {
-  background-color: #f3e8ff;
-  color: #6b21a8;
+  background-color: #fecdd3;
+  color: #9f1239;
   border-radius: 3px;
   padding: 0.1rem 0.3rem;
   font-weight: 800;
-  border: 1px solid #d8b4fe;
+  border: 1px solid #fda4af;
   margin: 0 1px;
 }
 
@@ -1076,8 +1073,8 @@ body.dark-mode .insight-box {
 }
 
 .diff-spacer-missing {
-  background-color: #fff7ed;
-  border-bottom: 2px dashed #ea580c;
+  background-color: #ffedd5;
+  border-bottom: none;
 }
 
 .diff-spacer-extra {

@@ -298,9 +298,8 @@ export default function ReportView({ resultData, onRestart }) {
           <h3>🔍 誤り箇所の比較チェック</h3>
           <div className="diff-legend">
             <span className="legend-item legend-correct">一致</span>
-            <span className="legend-item legend-typo">誤字・違い</span>
-            <span className="legend-item legend-missing">脱字（入力漏れ）</span>
-            <span className="legend-item legend-extra">挿入（不要な入力）</span>
+            <span className="legend-item legend-typo">誤字</span>
+            <span className="legend-item legend-missing">脱字</span>
           </div>
         </div>
 
@@ -347,8 +346,7 @@ export default function ReportView({ resultData, onRestart }) {
           <span className="score-title">総合正確率</span>
           <span className="score-number">{diff.accuracy}%</span>
           <span className="score-sub">
-            誤字: {diff.typoCount} / 脱字: {diff.missingCount} / 不要文字:{" "}
-            {diff.extraCount}
+            誤字: {diff.typoCount} / 脱字: {diff.missingCount}
           </span>
         </div>
         <div className="score-card accent-green">

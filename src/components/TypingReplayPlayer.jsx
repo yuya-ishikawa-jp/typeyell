@@ -1,7 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Play, Pause, RotateCcw, FastForward, Film } from 'lucide-react';
+import React, { useState, useEffect, useRef } from "react";
+import { Play, Pause, RotateCcw, FastForward, Film } from "lucide-react";
 
-export default function TypingReplayPlayer({ typingHistory = [], totalDurationSeconds = 0 }) {
+export default function TypingReplayPlayer({
+  typingHistory = [],
+  totalDurationSeconds = 0,
+}) {
   const totalDurationMs = Math.max(totalDurationSeconds * 1000, 1000);
   const [currentTimeMs, setCurrentTimeMs] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -46,9 +49,9 @@ export default function TypingReplayPlayer({ typingHistory = [], totalDurationSe
 
   // 現在のタイムスタンプ時点のテキストを取得
   const getCurrentText = () => {
-    if (!typingHistory || typingHistory.length === 0) return '';
+    if (!typingHistory || typingHistory.length === 0) return "";
 
-    let text = '';
+    let text = "";
     for (let i = 0; i < typingHistory.length; i++) {
       if (typingHistory[i].timeMs <= currentTimeMs) {
         text = typingHistory[i].text;
@@ -64,7 +67,8 @@ export default function TypingReplayPlayer({ typingHistory = [], totalDurationSe
   // キャレット（カーソル）が常に枠の一番下（最新入力行）に位置するよう自動スクロール
   useEffect(() => {
     if (screenContentRef.current) {
-      screenContentRef.current.scrollTop = screenContentRef.current.scrollHeight;
+      screenContentRef.current.scrollTop =
+        screenContentRef.current.scrollHeight;
     }
   }, [displayedText, currentTimeMs]);
 
@@ -91,24 +95,22 @@ export default function TypingReplayPlayer({ typingHistory = [], totalDurationSe
   // 時間フォーマット mm:ss
   const formatTime = (ms) => {
     const totalSecs = Math.floor(ms / 1000);
-    const mins = String(Math.floor(totalSecs / 60)).padStart(2, '0');
-    const secs = String(totalSecs % 60).padStart(2, '0');
+    const mins = String(Math.floor(totalSecs / 60)).padStart(2, "0");
+    const secs = String(totalSecs % 60).padStart(2, "0");
     return `${mins}:${secs}`;
   };
 
-  const progressPercent = Math.min(100, (currentTimeMs / totalDurationMs) * 100);
+  const progressPercent = Math.min(
+    100,
+    (currentTimeMs / totalDurationMs) * 100,
+  );
 
   return (
     <div className="replay-player-card">
       <div className="replay-player-header">
         <div className="replay-header-left">
           <Film size={18} className="replay-icon" />
-          <h3>🎬 入力プロセスの再生（リプレイ動画プレイヤー）</h3>
-        </div>
-        <div className="replay-header-right">
-          <span className={`replay-status-badge ${isPlaying ? 'status-playing' : 'status-paused'}`}>
-            {isPlaying ? `▶ 再生中 (${playbackSpeed}倍速)` : '⏸️ 一時停止中'}
-          </span>
+          <h3>🎬 入力プロセスの再生</h3>
         </div>
       </div>
 
@@ -116,11 +118,19 @@ export default function TypingReplayPlayer({ typingHistory = [], totalDurationSe
         {/* 動画風 入力画面表示エリア */}
         <div className="replay-screen-container">
           <div className="replay-screen-topbar">
-            <span>入力リアルタイムプレビュー</span>
+            <span>
+              <span
+                className={`replay-status-badge ${isPlaying ? "status-playing" : "status-paused"}`}
+              >
+                {isPlaying
+                  ? `▶ 再生中 (${playbackSpeed}倍速)`
+                  : "⏸️ 一時停止中"}
+              </span>
+            </span>
             <span>{displayedText.length} 文字</span>
           </div>
           <div ref={screenContentRef} className="replay-screen-content">
-            {displayedText.split('\n').map((lineText, lineIdx, arr) => {
+            {displayedText.split("\n").map((lineText, lineIdx, arr) => {
               const isLastLine = lineIdx === arr.length - 1;
               return (
                 <div key={lineIdx} className="replay-line-row">
@@ -147,7 +157,7 @@ export default function TypingReplayPlayer({ typingHistory = [], totalDurationSe
               value={currentTimeMs}
               onChange={handleSeek}
               style={{
-                background: `linear-gradient(to right, var(--primary-color) 0%, var(--primary-color) ${progressPercent}%, var(--border-color) ${progressPercent}%, var(--border-color) 100%)`
+                background: `linear-gradient(to right, var(--primary-color) 0%, var(--primary-color) ${progressPercent}%, var(--border-color) ${progressPercent}%, var(--border-color) 100%)`,
               }}
             />
             <div className="replay-time-display">
@@ -166,7 +176,7 @@ export default function TypingReplayPlayer({ typingHistory = [], totalDurationSe
                 onClick={togglePlay}
               >
                 {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-                {isPlaying ? '一時停止' : '再生'}
+                {isPlaying ? "一時停止" : "再生"}
               </button>
 
               <button
@@ -187,7 +197,7 @@ export default function TypingReplayPlayer({ typingHistory = [], totalDurationSe
                 <button
                   key={speed}
                   type="button"
-                  className={`speed-pill ${playbackSpeed === speed ? 'speed-pill-active' : ''}`}
+                  className={`speed-pill ${playbackSpeed === speed ? "speed-pill-active" : ""}`}
                   onClick={() => setPlaybackSpeed(speed)}
                 >
                   {speed}x

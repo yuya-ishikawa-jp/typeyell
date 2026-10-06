@@ -50,12 +50,11 @@ export function computeTextDiff(target, typed) {
     }
   }
 
-  let correctCount = 0, typoCount = 0, missingCount = 0, extraCount = 0;
+  let correctCount = 0, typoCount = 0, missingCount = 0;
   alignment.forEach(item => {
     if (item.type === 'correct') correctCount++;
-    if (item.type === 'typo') typoCount++;
+    if (item.type === 'typo' || item.type === 'extra') typoCount++;
     if (item.type === 'missing') missingCount++;
-    if (item.type === 'extra') extraCount++;
   });
 
   const accuracy = target.length > 0 ? Math.max(0, Math.round((correctCount / target.length) * 100)) : 0;
@@ -65,7 +64,6 @@ export function computeTextDiff(target, typed) {
     correctCount,
     typoCount,
     missingCount,
-    extraCount,
     accuracy
   };
 }
