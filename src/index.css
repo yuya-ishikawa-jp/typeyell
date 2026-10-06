@@ -4,37 +4,40 @@
 
 :root {
   /* オカヤマエール 公式ブランドカラーパレット */
-  --primary-color: #ea580c;        /* 温かみのあるオレンジ */
-  --primary-hover: #c2410c;        /* 濃いコーラルオレンジ */
-  --primary-light: #fff7ed;        /* ソフトオレンジ・クリーム */
-  --primary-border: #ffedd5;       /* やわらかなオレンジ枠線 */
+  --primary-color: #ea580c; /* 温かみのあるオレンジ */
+  --primary-hover: #c2410c; /* 濃いコーラルオレンジ */
+  --primary-light: #fff7ed; /* ソフトオレンジ・クリーム */
+  --primary-border: #ffedd5; /* やわらかなオレンジ枠線 */
 
-  --secondary-color: #0f766e;      /* オカヤマエール ティールグリーン */
-  --secondary-hover: #115e59;      /* ディープティール */
-  --secondary-light: #f0fdf4;      /* ソフトミント */
+  --secondary-color: #0f766e; /* オカヤマエール ティールグリーン */
+  --secondary-hover: #115e59; /* ディープティール */
+  --secondary-light: #f0fdf4; /* ソフトミント */
 
-  --accent-color: #f59e0b;         /* アクセントイエロー */
-  --success-color: #10b981;        /* グリーン */
-  --danger-color: #ef4444;         /* レッド */
-  --purple-color: #8b5cf6;         /* パープル */
+  --accent-color: #f59e0b; /* アクセントイエロー */
+  --success-color: #10b981; /* グリーン */
+  --danger-color: #ef4444; /* レッド */
+  --purple-color: #8b5cf6; /* パープル */
 
-  --bg-main: #faf9f6;              /* 温かみのあるオフホワイト・ペーパーベージュ */
+  --bg-main: #faf9f6; /* 温かみのあるオフホワイト・ペーパーベージュ */
   --bg-card: #ffffff;
   --bg-input: #ffffff;
-  --text-main: #1c1917;            /* 深みのあるダークブラウン・チャコール */
-  --text-muted: #78716c;           /* 温かみのあるグレー */
+  --text-main: #1c1917; /* 深みのあるダークブラウン・チャコール */
+  --text-muted: #78716c; /* 温かみのあるグレー */
   --border-color: #e7e5e4;
   --border-focus: #ea580c;
 
   --shadow-sm: 0 1px 3px rgba(234, 88, 12, 0.08);
-  --shadow-md: 0 4px 12px rgba(234, 88, 12, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
-  --shadow-lg: 0 12px 24px rgba(234, 88, 12, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md:
+    0 4px 12px rgba(234, 88, 12, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-lg:
+    0 12px 24px rgba(234, 88, 12, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
 
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 20px;
 
-  --font-sans: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans:
+    "Inter", "Noto Sans JP", -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 body.dark-mode {
@@ -60,7 +63,9 @@ body {
   color: var(--text-main);
   line-height: 1.7;
   min-height: 100vh;
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
 
 /* Header (オカヤマエールスタイル) */
@@ -251,7 +256,7 @@ body {
   background-color: var(--primary-light);
   border-bottom: 1px solid var(--primary-border);
   display: flex;
-  justify-content: space-between;
+  justify-content: start;
   align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
@@ -597,7 +602,11 @@ body.dark-mode .editor-overlay {
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, var(--primary-hover), var(--primary-color));
+  background: linear-gradient(
+    135deg,
+    var(--primary-hover),
+    var(--primary-color)
+  );
   box-shadow: var(--shadow-lg);
 }
 
@@ -876,10 +885,18 @@ body.dark-mode .editor-overlay {
   color: var(--text-muted);
 }
 
-.accent-blue .score-number { color: var(--primary-color); }
-.accent-green .score-number { color: var(--secondary-color); }
-.accent-purple .score-number { color: var(--purple-color); }
-.accent-orange .score-number { color: var(--accent-color); }
+.accent-blue .score-number {
+  color: var(--primary-color);
+}
+.accent-green .score-number {
+  color: var(--secondary-color);
+}
+.accent-purple .score-number {
+  color: var(--purple-color);
+}
+.accent-orange .score-number {
+  color: var(--accent-color);
+}
 
 .insight-box {
   background-color: var(--primary-light);
@@ -980,10 +997,22 @@ body.dark-mode .insight-box {
   font-weight: 600;
 }
 
-.legend-correct { background-color: #e7e5e4; color: #292524; }
-.legend-typo { background-color: #fecdd3; color: #9f1239; }
-.legend-missing { background-color: #ffedd5; color: #9a3412; }
-.legend-extra { background-color: #f3e8ff; color: #6b21a8; }
+.legend-correct {
+  background-color: #e7e5e4;
+  color: #292524;
+}
+.legend-typo {
+  background-color: #fecdd3;
+  color: #9f1239;
+}
+.legend-missing {
+  background-color: #ffedd5;
+  color: #9a3412;
+}
+.legend-extra {
+  background-color: #f3e8ff;
+  color: #6b21a8;
+}
 
 .diff-box {
   background-color: var(--bg-main);
@@ -1040,8 +1069,12 @@ body.dark-mode .insight-box {
     background-color: #ffffff !important;
     color: #000000 !important;
   }
-  
-  .app-header, .main-content, .modal-header, .modal-footer, .modal-backdrop {
+
+  .app-header,
+  .main-content,
+  .modal-header,
+  .modal-footer,
+  .modal-backdrop {
     display: none !important;
   }
 
@@ -1050,7 +1083,7 @@ body.dark-mode .insight-box {
     background: none !important;
     padding: 0 !important;
   }
-  
+
   .modal-dialog {
     max-width: 100% !important;
     box-shadow: none !important;
@@ -1061,7 +1094,7 @@ body.dark-mode .insight-box {
   .modal-body {
     padding: 0 !important;
   }
-  
+
   .print-only {
     display: block !important;
   }
@@ -1083,7 +1116,10 @@ body.dark-mode .insight-box {
     font-size: 0.9rem;
   }
 
-  .score-card, .insight-box, .chart-card, .diff-box {
+  .score-card,
+  .insight-box,
+  .chart-card,
+  .diff-box {
     border: 1px solid #ccc !important;
     background: #fff !important;
   }

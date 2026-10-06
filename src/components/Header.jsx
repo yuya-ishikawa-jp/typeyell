@@ -1,5 +1,5 @@
-import React from 'react';
-import { Sun, Moon } from 'lucide-react';
+import React from "react";
+import { Sun, Moon } from "lucide-react";
 
 export default function Header({ isDarkMode, setIsDarkMode }) {
   return (
@@ -8,9 +8,10 @@ export default function Header({ isDarkMode, setIsDarkMode }) {
         <div className="logo-area">
           <span className="logo-icon">⌨️</span>
           <div>
-            <span className="brand-badge">オカヤマエール 就労移行支援</span>
             <h1 className="app-title">TypeYell（タイプエール）</h1>
-            <p className="app-subtitle">あなたの「働きたい」にエールを。ステップ式 タイピング記憶・分析システム</p>
+            <p className="app-subtitle">
+              あなたの「働きたい」にエールを。タイピング練習アプリ
+            </p>
           </div>
         </div>
 
@@ -23,7 +24,7 @@ export default function Header({ isDarkMode, setIsDarkMode }) {
               title="ダークモード/ハイコントラスト切替"
             >
               {isDarkMode ? <Sun size={16} /> : <Moon size={16} />}
-              {isDarkMode ? ' ライト' : ' ダーク'}
+              {isDarkMode ? " ライト" : " ダーク"}
             </button>
           </div>
         </div>

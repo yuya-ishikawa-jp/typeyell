@@ -1,13 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Header from './components/Header';
-import StepBar from './components/StepBar';
-import TextSelectModal from './components/TextSelectModal';
-import SampleModal from './components/SampleModal';
-import WordToolbar from './components/WordToolbar';
-import ReportModal from './components/ReportModal';
-import { fetchSampleTasks } from './utils/sampleLoader';
-import { computeTextDiff, generateInsights } from './utils/diffEngine';
-import { BookOpen, Eye, ArrowRight, Play, CheckCircle, RotateCcw } from 'lucide-react';
+import React, { useState, useEffect, useRef } from "react";
+import Header from "./components/Header";
+import StepBar from "./components/StepBar";
+import TextSelectModal from "./components/TextSelectModal";
+import SampleModal from "./components/SampleModal";
+import WordToolbar from "./components/WordToolbar";
+import ReportModal from "./components/ReportModal";
+import { fetchSampleTasks } from "./utils/sampleLoader";
+import { computeTextDiff, generateInsights } from "./utils/diffEngine";
+import {
+  BookOpen,
+  Eye,
+  ArrowRight,
+  Play,
+  CheckCircle,
+  RotateCcw,
+} from "lucide-react";
 
 export default function App() {
   const [sampleTasks, setSampleTasks] = useState([]);
@@ -50,9 +57,9 @@ export default function App() {
   // ダークモード適用
   useEffect(() => {
     if (isDarkMode) {
-      document.body.classList.add('dark-mode');
+      document.body.classList.add("dark-mode");
     } else {
-      document.body.classList.remove('dark-mode');
+      document.body.classList.remove("dark-mode");
     }
   }, [isDarkMode]);
 
@@ -60,7 +67,9 @@ export default function App() {
   useEffect(() => {
     if (isRunning) {
       timerRef.current = setInterval(() => {
-        setElapsedSeconds(Math.floor((Date.now() - startTimeRef.current) / 1000));
+        setElapsedSeconds(
+          Math.floor((Date.now() - startTimeRef.current) / 1000),
+        );
       }, 1000);
     } else {
       clearInterval(timerRef.current);
@@ -82,14 +91,14 @@ export default function App() {
     setBackspaceCount(0);
     setBackspaceLogs([]);
     if (editorRef.current) {
-      editorRef.current.innerHTML = '';
+      editorRef.current.innerHTML = "";
     }
   };
 
   // プレーンテキスト抽出
   const getPlainText = () => {
-    if (!editorRef.current) return '';
-    return editorRef.current.innerText || editorRef.current.textContent || '';
+    if (!editorRef.current) return "";
+    return editorRef.current.innerText || editorRef.current.textContent || "";
   };
 
   // 【ステップ２】タイピングスタート
@@ -101,7 +110,7 @@ export default function App() {
     startTimeRef.current = Date.now();
 
     if (editorRef.current) {
-      editorRef.current.innerHTML = '';
+      editorRef.current.innerHTML = "";
       setTimeout(() => {
         editorRef.current.focus();
       }, 50);
@@ -111,15 +120,15 @@ export default function App() {
   // キー入力ハンドラ
   const handleKeyDown = (e) => {
     if (!isRunning) {
-      if (e.key !== 'Tab') e.preventDefault();
+      if (e.key !== "Tab") e.preventDefault();
       return;
     }
 
-    if (e.key === 'Backspace') {
+    if (e.key === "Backspace") {
       setBackspaceCount((prev) => prev + 1);
       setBackspaceLogs((prev) => [
         ...prev,
-        { timestamp: elapsedSeconds, count: backspaceCount + 1 }
+        { timestamp: elapsedSeconds, count: backspaceCount + 1 },
       ]);
     }
   };
@@ -127,19 +136,24 @@ export default function App() {
   // 【ステップ３】完了＆結果表示
   const handleFinishAndCheck = () => {
     if (!isRunning || elapsedSeconds === 0) {
-      alert('タイピングが開始されていません。「スタート」を押して入力してください。');
+      alert(
+        "タイピングが開始されていません。「スタート」を押して入力してください。",
+      );
       return;
     }
 
     setIsRunning(false);
 
     const typedText = getPlainText();
-    const targetText = selectedTask ? selectedTask.content : '';
+    const targetText = selectedTask ? selectedTask.content : "";
 
     const diff = computeTextDiff(targetText, typedText);
     const minutes = elapsedSeconds / 60;
     const cpm = minutes > 0 ? Math.round(typedText.length / minutes) : 0;
-    const bsRate = typedText.length > 0 ? ((backspaceCount / typedText.length) * 100).toFixed(1) : 0;
+    const bsRate =
+      typedText.length > 0
+        ? ((backspaceCount / typedText.length) * 100).toFixed(1)
+        : 0;
 
     const { insights, errStart, errMid, errEnd } = generateInsights(
       diff,
@@ -147,7 +161,7 @@ export default function App() {
       typedText,
       cpm,
       bsRate,
-      backspaceCount
+      backspaceCount,
     );
 
     const data = {
@@ -160,7 +174,7 @@ export default function App() {
       insights,
       errStart,
       errMid,
-      errEnd
+      errEnd,
     };
 
     setResultData(data);
@@ -210,11 +224,15 @@ export default function App() {
                   <div className="selected-task-header">
                     <span className="info-label">選択中の文章:</span>
                     <h3 className="info-title">{selectedTask.title}</h3>
-                    <span className="info-char-count">({selectedTask.content.length}文字)</span>
+                    <span className="info-char-count">
+                      ({selectedTask.content.length}文字)
+                    </span>
                   </div>
 
                   <p className="selected-task-snippet">
-                    {selectedTask.content ? selectedTask.content.substring(0, 100) + '...' : ''}
+                    {selectedTask.content
+                      ? selectedTask.content.substring(0, 100) + "..."
+                      : ""}
                   </p>
 
                   <div className="selected-task-buttons">
@@ -235,7 +253,9 @@ export default function App() {
                   </div>
                 </div>
               ) : (
-                <p className="step-placeholder-text">上の「文章を選択」ボタンを押して課題を選んでください。</p>
+                <p className="step-placeholder-text">
+                  上の「文章を選択」ボタンを押して課題を選んでください。
+                </p>
               )}
             </div>
           </section>
@@ -249,11 +269,16 @@ export default function App() {
             <div className="step-header">
               <div className="step-header-left">
                 <span className="step-badge">ステップ 2</span>
-                <h2>訓練を開始するには「スタート」ボタンをクリックしてください。</h2>
+                <h2>
+                  訓練を開始するには「スタート」ボタンをクリックしてください。
+                </h2>
               </div>
               {selectedTask && (
                 <div className="step2-task-pill">
-                  <span>課題: <strong>{selectedTask.title}</strong> ({selectedTask.content.length}字)</span>
+                  <span>
+                    課題: <strong>{selectedTask.title}</strong> (
+                    {selectedTask.content.length}字)
+                  </span>
                   <button
                     type="button"
                     className="btn btn-text btn-sm"
@@ -281,8 +306,10 @@ export default function App() {
               {/* Word風タイピング入力フォーム（縦方向に広く表示） */}
               <div className="editor-card-container">
                 <div className="editor-header-mini">
-                  <span>✍️ 入力フォーム（Word操作対応）</span>
-                  <span className="tip-text">装飾を行っても正誤判定には影響しません</span>
+                  <span>✍️ 入力フォーム</span>
+                  <span className="tip-text">
+                    装飾を行っても正誤判定には影響しません
+                  </span>
                 </div>
 
                 <WordToolbar editorRef={editorRef} />
@@ -299,7 +326,9 @@ export default function App() {
 
                   {!isRunning && (
                     <div className="editor-overlay">
-                      <p>上の「スタート」ボタンを押して訓練を開始してください</p>
+                      <p>
+                        上の「スタート」ボタンを押して訓練を開始してください
+                      </p>
                     </div>
                   )}
                 </div>
@@ -308,8 +337,12 @@ export default function App() {
               {/* ステップ３導線：完了ボタン */}
               <div className="step3-finish-bar">
                 <div className="finish-instruction">
-                  <span className="step-badge step-badge-green">ステップ 3</span>
-                  <h3>入力が完了したら「完了」ボタンをクリックしてください。</h3>
+                  <span className="step-badge step-badge-green">
+                    ステップ 3
+                  </span>
+                  <h3>
+                    入力が完了したら「完了」ボタンをクリックしてください。
+                  </h3>
                 </div>
                 <button
                   type="button"
@@ -341,7 +374,9 @@ export default function App() {
               </button>
             </div>
             <div className="step-body">
-              <p className="step3-notice">「結果を見る」モーダル、または下記の詳細分析結果をご確認ください。</p>
+              <p className="step3-notice">
+                「結果を見る」モーダル、または下記の詳細分析結果をご確認ください。
+              </p>
               <button
                 type="button"
                 className="btn btn-primary btn-lg"
