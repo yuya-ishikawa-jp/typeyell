@@ -29,7 +29,7 @@ export default function Header({
             <select
               id="header-task-select"
               className="header-select-control"
-              value={selectedTask.id}
+              value={selectedTask ? selectedTask.id : ''}
               onChange={(e) => onSelectTask(e.target.value)}
             >
               {sampleTasks.map((task) => (

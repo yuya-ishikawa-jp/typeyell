@@ -1,23 +1,19 @@
-import React from "react";
-import { Eye, BookOpen } from "lucide-react";
+import React from 'react';
+import { Eye, BookOpen } from 'lucide-react';
 
 export default function TaskInfoBar({ task, onOpenSampleModal }) {
+  if (!task) return null;
+
   return (
     <section className="card task-info-card">
       <div className="task-info-container">
         <div className="task-info-detail">
-          <span className="badge">難易度: {task.difficulty}</span>
           <h2 className="task-info-title">
             <BookOpen size={18} style={{ marginRight: 6 }} />
             {task.title}
           </h2>
           <div className="task-info-meta">
-            <span>
-              文字数: <strong>{task.content.length}</strong>文字
-            </span>
-            <span>
-              想定時間: <strong>{task.estimatedTime}</strong>分
-            </span>
+            <span>文字数: <strong>{task.content.length}</strong>文字</span>
           </div>
         </div>
 
@@ -28,7 +24,7 @@ export default function TaskInfoBar({ task, onOpenSampleModal }) {
             onClick={onOpenSampleModal}
           >
             <Eye size={18} />
-            練習テキストを確認する
+            練習テキストを確認・記憶する
           </button>
         </div>
       </div>
