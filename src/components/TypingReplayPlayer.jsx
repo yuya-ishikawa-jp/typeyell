@@ -233,13 +233,7 @@ export default function TypingReplayPlayer({
         <div className="replay-screen-container">
           <div className="replay-screen-topbar">
             <span>
-              <span
-                className={`replay-status-badge ${isPlaying ? "status-playing" : "status-paused"}`}
-              >
-                {isPlaying
-                  ? `▶ 再生中 (${playbackSpeed}倍速)`
-                  : "⏸️ 一時停止中"}
-              </span>
+              {isPlaying ? `▶ 再生中 (${playbackSpeed}倍速)` : "⏸️ 一時停止中"}
             </span>
             <span>{displayedText.length} 文字</span>
           </div>
