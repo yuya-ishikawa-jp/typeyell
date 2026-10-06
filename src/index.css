@@ -1169,7 +1169,7 @@ body.dark-mode .insight-box {
 .report-view-container {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2.25rem;
 }
 
 .report-view-actions {
@@ -1178,7 +1178,7 @@ body.dark-mode .insight-box {
   align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
-  padding-bottom: 0.75rem;
+  padding-bottom: 0.85rem;
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -1195,19 +1195,16 @@ body.dark-mode .insight-box {
 }
 
 .report-view-task {
-  font-size: 0.95rem;
-  font-weight: 700;
+  font-size: 0.92rem;
   color: var(--text-main);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+  font-weight: 700;
 }
 
 .task-meta-divider {
   color: var(--text-muted);
   font-weight: 400;
   opacity: 0.6;
+  margin: 0 0.35rem;
 }
 
 .score-number-sm {
@@ -1216,17 +1213,36 @@ body.dark-mode .insight-box {
   white-space: nowrap;
 }
 
-.report-summary-section {
+.report-section {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
 }
 
-.summary-section-header h3 {
+.report-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 2px solid var(--primary-border);
+}
+
+.report-section-header h3 {
   font-size: 1.15rem;
   font-weight: 800;
   color: var(--text-main);
   margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.report-section-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
 .report-view-btn-group {
@@ -1391,8 +1407,13 @@ body.dark-mode .insight-box {
 }
 
 @keyframes blinkCursor {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.2; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
 }
 
 .replay-slider-container {
@@ -1693,8 +1714,14 @@ body.dark-mode .insight-box {
 }
 
 @keyframes speedMenuFade {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .speed-dropdown-header {

@@ -228,13 +228,6 @@ export default function TypingReplayPlayer({
 
   return (
     <div className="replay-player-card">
-      <div className="replay-player-header">
-        <div className="replay-header-left">
-          <Film size={18} className="replay-icon" />
-          <h3>🎬 入力プロセスの再生</h3>
-        </div>
-      </div>
-
       <div className="replay-player-body">
         {/* 動画風 入力画面表示エリア */}
         <div className="replay-screen-container">

@@ -316,76 +316,77 @@ export default function ReportView({ resultData, onRestart }) {
         <div className="report-view-meta">
           <div className="report-view-date">📅 実施日時: {dateStr}</div>
           <div className="report-view-task">
-            <span>📝 課題名: {task?.title || "自由タイピング"}</span>
-            <span className="task-meta-divider">|</span>
-            <span>文字数: {typedText.length}文字</span>
+            📝 課題: {task?.title || "自由タイピング"}/{"　"}文字数:{" "}
+            {typedText.length}文字
           </div>
         </div>
       </div>
 
-      {/* サマリーセクション（一番上） */}
-      <div className="report-summary-section">
-        <div className="summary-section-header">
-          <h3>📊 サマリー</h3>
+      {/* 1. 概要セクション */}
+      <section className="report-section">
+        <div className="report-section-header">
+          <h3>📊 概要</h3>
         </div>
 
-        {/* 総合スコア */}
-        <div className="score-grid">
-          <div className="score-card accent-purple">
-            <span className="score-title">所要時間</span>
-            <span className="score-number">
-              {mins}:{secs}
-            </span>
-            {elapsedSeconds >= 60 && (
-              <span className="score-sub">{elapsedSeconds}秒</span>
-            )}
-          </div>
-          <div className="score-card accent-blue">
-            <span className="score-title">総合正確率</span>
-            <span className="score-number">{diff.accuracy}%</span>
-            <span className="score-sub">
-              誤字: {diff.typoCount} / 脱字: {diff.missingCount}
-            </span>
-          </div>
-          <div className="score-card accent-green">
-            <span className="score-title">タイピング速度</span>
-            <span className="score-number">{cpm}</span>
-            <span className="score-sub">文字/分 (CPM)</span>
-          </div>
-
-          <div className="score-card accent-orange">
-            <span className="score-title">Backspace修正</span>
-            <span className="score-number">{bsRate}</span>
-            <span className="score-sub">回/100文字</span>
-          </div>
-        </div>
-
-        {/* グラフ */}
-        <div className="charts-grid">
-          <div className="chart-card">
-            <h4>📍 お手本の行ごとの誤り発生数（行別エラー分布）</h4>
-            <div className="chart-container">
-              <Bar data={barData} options={barOptions} />
+        <div className="report-section-body">
+          {/* 総合スコア */}
+          <div className="score-grid">
+            <div className="score-card accent-purple">
+              <span className="score-title">所要時間</span>
+              <span className="score-number">
+                {mins}:{secs}
+              </span>
+              {elapsedSeconds >= 60 && (
+                <span className="score-sub">{elapsedSeconds}秒</span>
+              )}
             </div>
-            <p className="chart-desc">
-              ※どの行（何行目）で誤り（誤字・脱字）が多く発生したかを可視化します。
-            </p>
-          </div>
-          <div className="chart-card">
-            <h4>⏱️ 時間経過とBackspace（修正）回数の推移</h4>
-            <div className="chart-container">
-              <Line data={lineData} options={lineOptions} />
+            <div className="score-card accent-blue">
+              <span className="score-title">総合正確率</span>
+              <span className="score-number">{diff.accuracy}%</span>
+              <span className="score-sub">
+                誤字: {diff.typoCount} / 脱字: {diff.missingCount}
+              </span>
             </div>
-            <p className="chart-desc">
-              ※入力中にどのようなタイミングで迷いや修正が発生したかを示します。
-            </p>
+            <div className="score-card accent-green">
+              <span className="score-title">タイピング速度</span>
+              <span className="score-number">{cpm}</span>
+              <span className="score-sub">文字/分 (CPM)</span>
+            </div>
+
+            <div className="score-card accent-orange">
+              <span className="score-title">Backspace修正</span>
+              <span className="score-number">{bsRate}</span>
+              <span className="score-sub">回/100文字</span>
+            </div>
+          </div>
+
+          {/* グラフ */}
+          <div className="charts-grid">
+            <div className="chart-card">
+              <h4>📍 お手本の行ごとの誤り発生数（行別エラー分布）</h4>
+              <div className="chart-container">
+                <Bar data={barData} options={barOptions} />
+              </div>
+              <p className="chart-desc">
+                ※どの行（何行目）で誤り（誤字・脱字）が多く発生したかを可視化します。
+              </p>
+            </div>
+            <div className="chart-card">
+              <h4>⏱️ 時間経過とBackspace（修正）回数の推移</h4>
+              <div className="chart-container">
+                <Line data={lineData} options={lineOptions} />
+              </div>
+              <p className="chart-desc">
+                ※入力中にどのようなタイミングで迷いや修正が発生したかを示します。
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* 左右分割 差分表示 */}
-      <div className="diff-section">
-        <div className="diff-section-header">
+      {/* 2. 誤り箇所の比較チェック */}
+      <section className="report-section">
+        <div className="report-section-header">
           <h3>🔍 誤り箇所の比較チェック</h3>
           <div className="diff-legend">
             <span className="legend-item legend-correct">一致</span>
@@ -394,42 +395,52 @@ export default function ReportView({ resultData, onRestart }) {
           </div>
         </div>
 
-        <div className="diff-side-by-side-container">
-          {/* 左側：見本文章 */}
-          <div className="diff-pane diff-pane-target">
-            <div className="diff-pane-header">
-              <span className="pane-title">📄 正しい文章</span>
+        <div className="report-section-body">
+          <div className="diff-side-by-side-container">
+            {/* 左側：見本文章 */}
+            <div className="diff-pane diff-pane-target">
+              <div className="diff-pane-header">
+                <span className="pane-title">📄 正しい文章</span>
+              </div>
+              <div
+                ref={targetPaneRef}
+                className="diff-pane-content"
+                onScroll={() => handleScroll("target")}
+              >
+                {renderTargetAlignmentLines()}
+              </div>
             </div>
-            <div
-              ref={targetPaneRef}
-              className="diff-pane-content"
-              onScroll={() => handleScroll("target")}
-            >
-              {renderTargetAlignmentLines()}
-            </div>
-          </div>
 
-          {/* 右側：あなたの入力文章 */}
-          <div className="diff-pane diff-pane-typed">
-            <div className="diff-pane-header">
-              <span className="pane-title">✍️ 入力された文章</span>
-            </div>
-            <div
-              ref={typedPaneRef}
-              className="diff-pane-content"
-              onScroll={() => handleScroll("typed")}
-            >
-              {renderTypedAlignmentLines()}
+            {/* 右側：あなたの入力文章 */}
+            <div className="diff-pane diff-pane-typed">
+              <div className="diff-pane-header">
+                <span className="pane-title">✍️ 入力された文章</span>
+              </div>
+              <div
+                ref={typedPaneRef}
+                className="diff-pane-content"
+                onScroll={() => handleScroll("typed")}
+              >
+                {renderTypedAlignmentLines()}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* 動画風入力リプレイプレイヤー (囲み枠なし) */}
-      <TypingReplayPlayer
-        typingHistory={typingHistory}
-        totalDurationSeconds={elapsedSeconds}
-      />
+      {/* 3. 入力プロセスの再生 */}
+      <section className="report-section">
+        <div className="report-section-header">
+          <h3>🎬 入力プロセスの再生</h3>
+        </div>
+
+        <div className="report-section-body">
+          <TypingReplayPlayer
+            typingHistory={typingHistory}
+            totalDurationSeconds={elapsedSeconds}
+          />
+        </div>
+      </section>
 
       <div className="report-view-footer">
         <button
