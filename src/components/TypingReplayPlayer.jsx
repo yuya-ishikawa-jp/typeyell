@@ -266,34 +266,26 @@ export default function TypingReplayPlayer({
           </div>
         </div>
 
-        {/* タイムライン ＆ コントロールバー */}
+        {/* プログレスバー（入力プレビュー直下＆再生コントロール直上に隙間なく結合） */}
+        <div className="replay-slider-container">
+          <input
+            type="range"
+            className="replay-slider"
+            min={0}
+            max={totalDurationMs}
+            value={currentTimeMs}
+            onChange={handleSeek}
+            style={{
+              background: `linear-gradient(to right, var(--primary-color) 0%, var(--primary-color) ${progressPercent}%, #374151 ${progressPercent}%, #374151 100%)`,
+            }}
+          />
+        </div>
+
+        {/* コントロールバー */}
         <div className="replay-controls-container">
-          {/* プログレスバー（シークバー） ＋ ヒートマップトラック */}
-          <div className="replay-timeline-wrapper">
-            <div className="replay-slider-container">
-              <input
-                type="range"
-                className="replay-slider"
-                min={0}
-                max={totalDurationMs}
-                value={currentTimeMs}
-                onChange={handleSeek}
-                style={{
-                  background: `linear-gradient(to right, var(--primary-color) 0%, var(--primary-color) ${progressPercent}%, var(--border-color) ${progressPercent}%, var(--border-color) 100%)`,
-                }}
-              />
-            </div>
-
-            <div className="replay-time-display">
-              <span>{formatTime(currentTimeMs)}</span>
-              <span> / </span>
-              <span>{formatTime(totalDurationMs)}</span>
-            </div>
-          </div>
-
           {/* ボタン ＆ 音量風速度コントロール */}
           <div className="replay-buttons-row">
-            {/* 再生コントロール群（10秒戻る - 再生/停止 - 10秒進む） */}
+            {/* 再生コントロール群（10秒戻る - 再生/停止 - 10秒進む - 経過時間） */}
             <div className="replay-btn-left">
               <button
                 type="button"
@@ -321,6 +313,13 @@ export default function TypingReplayPlayer({
               >
                 10秒 <RotateCw size={15} />
               </button>
+
+              {/* 経過時間（10秒進むボタンの右側） */}
+              <div className="replay-time-display">
+                <span>{formatTime(currentTimeMs)}</span>
+                <span> / </span>
+                <span>{formatTime(totalDurationMs)}</span>
+              </div>
             </div>
 
             {/* 音量風 速度コントロールメニュー */}
