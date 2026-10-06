@@ -1,74 +1,43 @@
 [
   {
-    "id": "aioeo",
-    "level": 1,
-    "title": "[しょきゅう・ひらがな]あいうえお",
-    "file": "/text-samples/aiueo.txt"
-  },
-  {
-    "id": "tango(kana)",
-    "level": 1,
-    "title": "[しょきゅう・ひらがな]ことば　その１",
-    "file": "/text-samples/tango(kana).txt"
-  },
-  {
-    "id": "tango2(kana)",
-    "level": 1,
-    "title": "[しょきゅう・ひらがな]ことば　その２",
-    "file": "/text-samples/tang2(kana).txt"
-  },
-  {
-    "id": "tango(kanji)",
-    "level": 2,
-    "title": "[初級・漢字]言葉",
-    "file": "/text-samples/tango(kanji).txt"
-  },
-  {
     "id": "sobatoyudachi(kana)",
-    "level": 3,
-    "title": "[しょきゅう・カタカナ]ソバとゆうだち",
-    "file": "/text-samples/08.sobatoyudachi(kana).txt"
+    "title": "ソバとゆうだち（かな）",
+    "file": "/text-samples/sobatoyudachi(kana).txt"
   },
   {
     "id": "sobatoyudachi(kanji)",
-    "level": 4,
-    "title": "[中級・漢字]ソバとゆうだち",
-    "file": "/text-samples/07.sobatoyudachi(kanji).txt"
+    "title": "ソバとゆうだち（漢字）",
+    "file": "/text-samples/sobatoyudachi(kanji).txt"
   },
-  {
-    "id": "idachannohana",
-    "level": 4,
-    "title": "[中級・漢字]イーダちゃんの花",
-    "file": "/text-samples/02.idachannohana.txt"
-  },
-  {
-    "id": "yukidaruma",
-    "level": 5,
-    "title": "[上級]雪だるま",
-    "file": "/text-samples/01.yukidaruma.txt"
-  },
+
   {
     "id": "nenposei",
-    "level": 6,
-    "title": "[上級]年俸制に関する文章",
-    "file": "/text-samples/03.nenposei.txt"
+    "title": "年俸制に関する文章",
+    "file": "/text-samples/nenposei.txt"
   },
   {
     "id": "sekiyu",
-    "level": 6,
-    "title": "[上級]石油とエネルギーに関する文章",
-    "file": "/text-samples/04.sekiyu.txt"
+    "title": "石油とエネルギーに関する文章",
+    "file": "/text-samples/sekiyu.txt"
   },
   {
     "id": "konbini",
-    "level": 6,
-    "title": "[上級]コンビニエンスストアに関する文章",
-    "file": "/text-samples/05.konbini.txt"
+    "title": "コンビニエンスストアに関する文章",
+    "file": "/text-samples/konbini.txt"
   },
   {
     "id": "orora",
-    "level": 6,
-    "title": "[上級]オーロラに関する文章",
-    "file": "/text-samples/06.orora.txt"
+    "title": "オーロラに関する文章",
+    "file": "/text-samples/orora.txt"
+  },
+  {
+    "id": "idachannohana",
+    "title": "イーダちゃんの花",
+    "file": "/text-samples/idachannohana.txt"
+  },
+  {
+    "id": "yukidaruma",
+    "title": "雪だるま",
+    "file": "/text-samples/yukidaruma.txt"
   }
 ]

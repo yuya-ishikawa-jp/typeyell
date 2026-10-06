@@ -1,6 +1,10 @@
-import React from 'react';
+import React from "react";
 
-export default function SampleSelector({ sampleTasks, selectedTask, onSelectTask }) {
+export default function SampleSelector({
+  sampleTasks,
+  selectedTask,
+  onSelectTask,
+}) {
   return (
     <section className="card sample-select-card">
       <div className="card-header">
@@ -24,8 +28,12 @@ export default function SampleSelector({ sampleTasks, selectedTask, onSelectTask
           </select>
         </div>
         <div className="sample-meta">
-          <span className="meta-item">文字数: <strong>{selectedTask.content.length}</strong>文字</span>
-          <span className="meta-item">想定時間: <strong>{selectedTask.estimatedTime}</strong>分</span>
+          <span className="meta-item">
+            文字数: <strong>{selectedTask.content.length}</strong>文字
+          </span>
+          <span className="meta-item">
+            想定時間: <strong>{selectedTask.estimatedTime}</strong>分
+          </span>
         </div>
       </div>
     </section>
