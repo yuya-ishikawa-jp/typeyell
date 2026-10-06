@@ -225,14 +225,26 @@ export default function ReportView({ resultData, onRestart }) {
       ? ((backspaceCount / typedText.length) * 100).toFixed(1)
       : 0;
 
-  // 1. 位置別エラー分布データ
+  // お手本の行番号別エラー集計 (X軸: 1行目, 2行目...)
+  const alignmentLines = getAlignmentLines(diff.alignment);
+  const lineBarLabels = alignmentLines.map((_, idx) => `${idx + 1}行目`);
+  const lineErrorCounts = alignmentLines.map((lineItems) => {
+    let errCount = 0;
+    lineItems.forEach((item) => {
+      if (item.type !== "correct") {
+        errCount++;
+      }
+    });
+    return errCount;
+  });
+
   const barData = {
-    labels: ["序盤 (0〜33%)", "中盤 (34〜66%)", "終盤 (67〜100%)"],
+    labels: lineBarLabels,
     datasets: [
       {
-        label: "誤り（ミス）発生数",
-        data: [errStart, errMid, errEnd],
-        backgroundColor: ["#ef4444", "#f59e0b", "#8b5cf6"],
+        label: "誤り発生数",
+        data: lineErrorCounts,
+        backgroundColor: "#ea580c",
         borderRadius: 6,
       },
     ],
@@ -371,12 +383,12 @@ export default function ReportView({ resultData, onRestart }) {
       {/* グラフ */}
       <div className="charts-grid">
         <div className="chart-card">
-          <h4>📍 文章の位置ごとの誤り率分布（序盤・中盤・終盤）</h4>
+          <h4>📍 お手本の行ごとの誤り発生数（行別エラー分布）</h4>
           <div className="chart-container">
             <Bar data={barData} options={barOptions} />
           </div>
           <p className="chart-desc">
-            ※誤りが「最初」「途中」「最後」のどこに多いか可視化します。
+            ※どの行（何行目）で誤り（誤字・脱字）が多く発生したかを可視化します。
           </p>
         </div>
         <div className="chart-card">

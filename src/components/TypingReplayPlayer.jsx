@@ -1,5 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Play, Pause, RotateCcw, FastForward, Film } from "lucide-react";
+import {
+  Play,
+  Pause,
+  Film,
+  Activity,
+  AlertCircle,
+  CheckCircle2,
+  RotateCcw,
+  RotateCw,
+  Gauge,
+  ChevronDown
+} from "lucide-react";
 
 export default function TypingReplayPlayer({
   typingHistory = [],
@@ -9,9 +20,22 @@ export default function TypingReplayPlayer({
   const [currentTimeMs, setCurrentTimeMs] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState(10); // デフォルト10倍速
+  const [isSpeedMenuOpen, setIsSpeedMenuOpen] = useState(false);
 
   const screenContentRef = useRef(null);
+  const speedMenuRef = useRef(null);
   const speedOptions = [1, 2, 5, 10, 20, 30];
+
+  // メニュー外クリック時に速度メニューを閉じる
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (speedMenuRef.current && !speedMenuRef.current.contains(e.target)) {
+        setIsSpeedMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // 再生ループ (requestAnimationFrame)
   useEffect(() => {
@@ -62,7 +86,82 @@ export default function TypingReplayPlayer({
     return text;
   };
 
+  // 現在時点での打鍵統計を集計
+  const getCurrentCounts = () => {
+    const counts = { text: 0, backspace: 0, arrow: 0, space: 0, enter: 0, total: 0 };
+    if (!typingHistory || typingHistory.length === 0) return counts;
+
+    for (let i = 0; i < typingHistory.length; i++) {
+      const item = typingHistory[i];
+      if (item.timeMs <= currentTimeMs) {
+        if (item.keyType && counts[item.keyType] !== undefined) {
+          counts[item.keyType]++;
+          counts.total++;
+        }
+      } else {
+        break;
+      }
+    }
+    return counts;
+  };
+
+  // 最終時点の全体統計（自動診断用）
+  const getFinalCounts = () => {
+    const counts = { text: 0, backspace: 0, arrow: 0, space: 0, enter: 0, total: 0 };
+    if (!typingHistory) return counts;
+    typingHistory.forEach((item) => {
+      if (item.keyType && counts[item.keyType] !== undefined) {
+        counts[item.keyType]++;
+        counts.total++;
+      }
+    });
+    return counts;
+  };
+
   const displayedText = getCurrentText();
+  const currentCounts = getCurrentCounts();
+  const finalCounts = getFinalCounts();
+
+  // 自動診断メッセージの生成
+  const getHabitDiagnosis = () => {
+    if (finalCounts.total === 0) return null;
+
+    const arrowRatio = finalCounts.arrow / finalCounts.total;
+    const bsRatio = finalCounts.backspace / finalCounts.total;
+    const spaceRatio = finalCounts.space / finalCounts.total;
+
+    if (finalCounts.arrow >= 5 || arrowRatio > 0.08) {
+      return {
+        type: "warning",
+        title: "⚠️ カーソル移動（矢印キー: " + finalCounts.arrow + "回）が多めです",
+        desc: "文章の途中へ戻って修正・挿入を行っている傾向が見られます。「入力し始める前に、一度全体をしっかり見比べる習慣」を意識してみましょう。",
+      };
+    }
+
+    if (finalCounts.backspace >= 8 || bsRatio > 0.12) {
+      return {
+        type: "warning",
+        title: "⚠️ 打鍵修正（Backspace: " + finalCounts.backspace + "回）が多く発生しています",
+        desc: "直前の打ち間違いをその場で何度も修正しています。ホームポジションを意識し、速度よりも「正確な1音目」を大切に打ち進めましょう。",
+      };
+    }
+
+    if (finalCounts.space >= 15 || spaceRatio > 0.25) {
+      return {
+        type: "info",
+        title: "💡 変換操作（Space: " + finalCounts.space + "回）が多めです",
+        desc: "漢字変換の候補選びに時間を取られている可能性があります。短すぎる語句ではなく、適切な文節単位で変換するとスムーズになります。",
+      };
+    }
+
+    return {
+      type: "success",
+      title: "✨ 非常にスムーズなキー操作です",
+      desc: "途中でのやり直し（矢印キー）や打鍵修正が少なく、迷いの少ない安定した入力リズムが保たれています！",
+    };
+  };
+
+  const habitInsight = getHabitDiagnosis();
 
   // キャレット（カーソル）が常に枠の一番下（最新入力行）に位置するよう自動スクロール
   useEffect(() => {
@@ -80,10 +179,14 @@ export default function TypingReplayPlayer({
     setIsPlaying(!isPlaying);
   };
 
-  // 最初から再生
-  const handleRestart = () => {
-    setCurrentTimeMs(0);
-    setIsPlaying(true);
+  // 10秒戻る
+  const handleSkipBack = () => {
+    setCurrentTimeMs((prev) => Math.max(0, prev - 10000));
+  };
+
+  // 10秒進む
+  const handleSkipForward = () => {
+    setCurrentTimeMs((prev) => Math.min(totalDurationMs, prev + 10000));
   };
 
   // シークバー操作
@@ -147,19 +250,37 @@ export default function TypingReplayPlayer({
 
         {/* タイムライン ＆ コントロールバー */}
         <div className="replay-controls-container">
-          {/* プログレスバー（シークバー） */}
+          {/* プログレスバー（シークバー） ＋ ヒートマップトラック */}
           <div className="replay-timeline-wrapper">
-            <input
-              type="range"
-              className="replay-slider"
-              min={0}
-              max={totalDurationMs}
-              value={currentTimeMs}
-              onChange={handleSeek}
-              style={{
-                background: `linear-gradient(to right, var(--primary-color) 0%, var(--primary-color) ${progressPercent}%, var(--border-color) ${progressPercent}%, var(--border-color) 100%)`,
-              }}
-            />
+            <div className="replay-slider-container">
+              <input
+                type="range"
+                className="replay-slider"
+                min={0}
+                max={totalDurationMs}
+                value={currentTimeMs}
+                onChange={handleSeek}
+                style={{
+                  background: `linear-gradient(to right, var(--primary-color) 0%, var(--primary-color) ${progressPercent}%, var(--border-color) ${progressPercent}%, var(--border-color) 100%)`,
+                }}
+              />
+              {/* タイムライン打鍵ヒートマップトラック */}
+              <div className="replay-heatmap-strip">
+                {typingHistory.map((item, idx) => {
+                  if (item.timeMs > totalDurationMs) return null;
+                  const leftPos = (item.timeMs / totalDurationMs) * 100;
+                  return (
+                    <span
+                      key={idx}
+                      className={`heatmap-dot heatmap-${item.keyType || "text"}`}
+                      style={{ left: `${leftPos}%` }}
+                      title={`${formatTime(item.timeMs)}: ${item.keyType || "文字"}`}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+
             <div className="replay-time-display">
               <span>{formatTime(currentTimeMs)}</span>
               <span> / </span>
@@ -167,9 +288,19 @@ export default function TypingReplayPlayer({
             </div>
           </div>
 
-          {/* ボタン ＆ 倍速コントロール */}
+          {/* ボタン ＆ 音量風速度コントロール */}
           <div className="replay-buttons-row">
+            {/* 再生コントロール群（10秒戻る - 再生/停止 - 10秒進む） */}
             <div className="replay-btn-left">
+              <button
+                type="button"
+                className="btn btn-outline btn-sm replay-skip-btn"
+                onClick={handleSkipBack}
+                title="10秒戻る"
+              >
+                <RotateCcw size={15} /> 10秒
+              </button>
+
               <button
                 type="button"
                 className="btn btn-primary btn-sm replay-main-btn"
@@ -181,30 +312,65 @@ export default function TypingReplayPlayer({
 
               <button
                 type="button"
-                className="btn btn-outline btn-sm"
-                onClick={handleRestart}
+                className="btn btn-outline btn-sm replay-skip-btn"
+                onClick={handleSkipForward}
+                title="10秒進む"
               >
-                <RotateCcw size={16} /> 最初から
+                10秒 <RotateCw size={15} />
               </button>
             </div>
 
-            {/* 倍速切替ボタン (2倍速〜30倍速) */}
-            <div className="replay-speed-selector">
-              <span className="speed-label">
-                <FastForward size={14} style={{ marginRight: 4 }} /> 再生速度:
-              </span>
-              {speedOptions.map((speed) => (
-                <button
-                  key={speed}
-                  type="button"
-                  className={`speed-pill ${playbackSpeed === speed ? "speed-pill-active" : ""}`}
-                  onClick={() => setPlaybackSpeed(speed)}
-                >
-                  {speed}x
-                </button>
-              ))}
+            {/* 音量風 速度コントロールメニュー */}
+            <div className="replay-speed-menu-container" ref={speedMenuRef}>
+              <button
+                type="button"
+                className={`btn btn-outline btn-sm speed-menu-btn ${isSpeedMenuOpen ? "active" : ""}`}
+                onClick={() => setIsSpeedMenuOpen(!isSpeedMenuOpen)}
+                title="再生速度の切り替え"
+              >
+                <Gauge size={16} />
+                <span>速度: <strong>{playbackSpeed}x</strong></span>
+                <ChevronDown size={14} className={`speed-chevron ${isSpeedMenuOpen ? "open" : ""}`} />
+              </button>
+
+              {isSpeedMenuOpen && (
+                <div className="speed-dropdown-menu">
+                  <div className="speed-dropdown-header">⚡ 再生速度</div>
+                  <div className="speed-options-list">
+                    {speedOptions.map((speed) => (
+                      <button
+                        key={speed}
+                        type="button"
+                        className={`speed-option-item ${playbackSpeed === speed ? "active" : ""}`}
+                        onClick={() => {
+                          setPlaybackSpeed(speed);
+                          setIsSpeedMenuOpen(false);
+                        }}
+                      >
+                        {speed}倍速
+                        {playbackSpeed === speed && <span className="speed-check">✓</span>}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
+
+          {/* 自動入力癖診断インサイト */}
+          {habitInsight && (
+            <div className={`habit-diagnosis-box diagnosis-${habitInsight.type}`}>
+              <div className="diagnosis-title">
+                {habitInsight.type === "warning" ? (
+                  <AlertCircle size={16} />
+                ) : (
+                  <CheckCircle2 size={16} />
+                )}
+                <span>{habitInsight.title}</span>
+              </div>
+              <p className="diagnosis-desc">{habitInsight.desc}</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
