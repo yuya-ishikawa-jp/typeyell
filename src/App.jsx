@@ -1,16 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import Header from "./components/Header";
 import StepBar from "./components/StepBar";
-import TextSelectModal from "./components/TextSelectModal";
 import SampleModal from "./components/SampleModal";
 import WordToolbar from "./components/WordToolbar";
 import ReportModal from "./components/ReportModal";
 import { fetchSampleTasks } from "./utils/sampleLoader";
 import { computeTextDiff, generateInsights } from "./utils/diffEngine";
 import {
-  BookOpen,
+  FileText,
   Eye,
-  ArrowRight,
   Play,
   CheckCircle,
   RotateCcw,
@@ -24,8 +22,7 @@ export default function App() {
   // ステップ状態 (1, 2, 3)
   const [step, setStep] = useState(1);
 
-  // モーダル表示状態
-  const [isSelectModalOpen, setIsSelectModalOpen] = useState(false);
+  // モーダル表示状態（見本記憶モーダル ＆ レポートモーダル）
   const [isSampleViewModalOpen, setIsSampleViewModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
@@ -65,7 +62,7 @@ export default function App() {
     if (isRunning) {
       timerRef.current = setInterval(() => {
         setElapsedSeconds(
-          Math.floor((Date.now() - startTimeRef.current) / 1000),
+          Math.floor((Date.now() - startTimeRef.current) / 1000)
         );
       }, 1000);
     } else {
@@ -74,11 +71,10 @@ export default function App() {
     return () => clearInterval(timerRef.current);
   }, [isRunning]);
 
-  // 課題選択ハンドラ
+  // 課題カードの選択ハンドラ（クリック即モーダル表示）
   const handleSelectTask = (task) => {
     setSelectedTask(task);
     resetTrainingState();
-    // 文章選択後、見本確認モーダルを自動表示して記憶を促す
     setIsSampleViewModalOpen(true);
   };
 
@@ -134,7 +130,7 @@ export default function App() {
   const handleFinishAndCheck = () => {
     if (!isRunning || elapsedSeconds === 0) {
       alert(
-        "タイピングが開始されていません。「スタート」を押して入力してください。",
+        "タイピングが開始されていません。「スタート」を押して入力してください。"
       );
       return;
     }
@@ -158,7 +154,7 @@ export default function App() {
       typedText,
       cpm,
       bsRate,
-      backspaceCount,
+      backspaceCount
     );
 
     const data = {
@@ -206,55 +202,41 @@ export default function App() {
             </div>
 
             <div className="step-body">
-              <div className="step1-actions">
-                <button
-                  type="button"
-                  className="btn btn-primary btn-lg"
-                  onClick={() => setIsSelectModalOpen(true)}
-                >
-                  <BookOpen size={20} /> 文章を選択
-                </button>
+              {/* 課題カード一覧（active状態/選択中ボタンを削除したシンプル表示） */}
+              <div className="text-task-grid">
+                {sampleTasks.map((task) => {
+                  const previewSnippet = task.content
+                    ? task.content.substring(0, 75) + "..."
+                    : "";
+
+                  return (
+                    <div
+                      key={task.id}
+                      className="task-select-card"
+                      onClick={() => handleSelectTask(task)}
+                    >
+                      <div className="task-select-card-header">
+                        <h3 className="task-select-title">
+                          <FileText size={18} style={{ marginRight: 6 }} />
+                          {task.title}
+                        </h3>
+                      </div>
+
+                      <div className="task-select-card-meta">
+                        <span>
+                          文字数:{" "}
+                          <strong>
+                            {task.content ? task.content.length : 0}
+                          </strong>
+                          文字
+                        </span>
+                      </div>
+
+                      <p className="task-select-snippet">{previewSnippet}</p>
+                    </div>
+                  );
+                })}
               </div>
-
-              {/* 選択された文章の情報表示エリア */}
-              {selectedTask ? (
-                <div className="selected-task-info-box">
-                  <div className="selected-task-header">
-                    <span className="info-label">選択中の文章:</span>
-                    <h3 className="info-title">{selectedTask.title}</h3>
-                    <span className="info-char-count">
-                      ({selectedTask.content.length}文字)
-                    </span>
-                  </div>
-
-                  <p className="selected-task-snippet">
-                    {selectedTask.content
-                      ? selectedTask.content.substring(0, 100) + "..."
-                      : ""}
-                  </p>
-
-                  <div className="selected-task-buttons">
-                    <button
-                      type="button"
-                      className="btn btn-outline"
-                      onClick={() => setIsSampleViewModalOpen(true)}
-                    >
-                      <Eye size={18} /> 文章を確認・記憶する
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-success btn-lg"
-                      onClick={() => setStep(2)}
-                    >
-                      ステップ2（タイピング訓練）へ進む <ArrowRight size={18} />
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <p className="step-placeholder-text">
-                  上の「文章を選択」ボタンを押して課題を選んでください。
-                </p>
-              )}
             </div>
           </section>
         )}
@@ -282,7 +264,7 @@ export default function App() {
                     className="btn btn-text btn-sm"
                     onClick={() => setIsSampleViewModalOpen(true)}
                   >
-                    <Eye size={15} /> 文章を再確認
+                    <Eye size={15} /> 全文を再確認
                   </button>
                 </div>
               )}
@@ -301,7 +283,7 @@ export default function App() {
                 </button>
               </div>
 
-              {/* Word風タイピング入力フォーム（縦方向に広く表示） */}
+              {/* Word風タイピング入力フォーム */}
               <div className="editor-card-container">
                 <div className="editor-header-mini">
                   <span>✍️ 入力フォーム</span>
@@ -387,19 +369,11 @@ export default function App() {
         )}
       </main>
 
-      {/* ステップ１：文章選択モーダル */}
-      <TextSelectModal
-        isOpen={isSelectModalOpen}
-        onClose={() => setIsSelectModalOpen(false)}
-        sampleTasks={sampleTasks}
-        selectedTask={selectedTask}
-        onSelectTask={handleSelectTask}
-      />
-
-      {/* 練習テキスト記憶ダイアログ */}
+      {/* 練習テキスト記憶ダイアログ（「ステップ2へ進む」ボタンで移行） */}
       <SampleModal
         isOpen={isSampleViewModalOpen}
         onClose={() => setIsSampleViewModalOpen(false)}
+        onProceedToStep2={() => setStep(2)}
         task={selectedTask}
       />
 
