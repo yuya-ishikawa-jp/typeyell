@@ -51,7 +51,7 @@ export default function TextSelectModal({
                   <p className="task-select-snippet">{previewSnippet}</p>
 
                   <button type="button" className="btn btn-outline btn-sm btn-select-this">
-                    {isSelected ? '選択中' : 'この文章を選択する'}
+                    {isSelected ? '選択中（全文を表示）' : '全文を表示する'}
                   </button>
                 </div>
               );

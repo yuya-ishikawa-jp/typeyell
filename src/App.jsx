@@ -47,9 +47,6 @@ export default function App() {
     async function loadTasks() {
       const tasks = await fetchSampleTasks();
       setSampleTasks(tasks);
-      if (tasks.length > 0) {
-        setSelectedTask(tasks[0]);
-      }
     }
     loadTasks();
   }, []);
@@ -185,6 +182,7 @@ export default function App() {
   // ステップ1へ戻る（新しい訓練）
   const handleRestartAll = () => {
     resetTrainingState();
+    setSelectedTask(null);
     setStep(1);
     setIsReportModalOpen(false);
   };
