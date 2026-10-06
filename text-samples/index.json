@@ -1,0 +1,43 @@
+[
+  {
+    "id": "sobatoyudachi(kana)",
+    "title": "ソバとゆうだち（かな）",
+    "file": "/text-samples/sobatoyudachi(kana).txt"
+  },
+  {
+    "id": "sobatoyudachi(kanji)",
+    "title": "ソバとゆうだち（漢字）",
+    "file": "/text-samples/sobatoyudachi(kanji).txt"
+  },
+
+  {
+    "id": "nenposei",
+    "title": "年俸制に関する文章",
+    "file": "/text-samples/nenposei.txt"
+  },
+  {
+    "id": "sekiyu",
+    "title": "石油とエネルギーに関する文章",
+    "file": "/text-samples/sekiyu.txt"
+  },
+  {
+    "id": "konbini",
+    "title": "コンビニエンスストアに関する文章",
+    "file": "/text-samples/konbini.txt"
+  },
+  {
+    "id": "orora",
+    "title": "オーロラに関する文章",
+    "file": "/text-samples/orora.txt"
+  },
+  {
+    "id": "idachannohana",
+    "title": "イーダちゃんの花",
+    "file": "/text-samples/idachannohana.txt"
+  },
+  {
+    "id": "yukidaruma",
+    "title": "雪だるま",
+    "file": "/text-samples/yukidaruma.txt"
+  }
+]
