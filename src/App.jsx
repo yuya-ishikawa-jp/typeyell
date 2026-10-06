@@ -340,15 +340,10 @@ export default function App() {
         {step === 3 && resultData && (
           <section className="card step-card">
             <div className="step-header">
-              <span className="step-badge step-badge-green">ステップ 3</span>
-              <h2>タイピング訓練 成果・分析レポート</h2>
-              <button
-                type="button"
-                className="btn btn-outline btn-sm"
-                onClick={handleRestartAll}
-              >
-                <RotateCcw size={16} /> 別の訓練を開始する（ステップ1へ）
-              </button>
+              <div className="step-header-left">
+                <span className="step-badge step-badge-green">ステップ 3</span>
+                <h2>結果確認・分析</h2>
+              </div>
             </div>
             <div className="step-body">
               {/* レポート画面を直接埋め込み */}
