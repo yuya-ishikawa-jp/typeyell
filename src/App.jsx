@@ -6,13 +6,7 @@ import WordToolbar from "./components/WordToolbar";
 import ReportModal from "./components/ReportModal";
 import { fetchSampleTasks } from "./utils/sampleLoader";
 import { computeTextDiff, generateInsights } from "./utils/diffEngine";
-import {
-  FileText,
-  Eye,
-  Play,
-  CheckCircle,
-  RotateCcw,
-} from "lucide-react";
+import { FileText, CheckCircle, RotateCcw } from "lucide-react";
 
 export default function App() {
   const [sampleTasks, setSampleTasks] = useState([]);
@@ -21,6 +15,9 @@ export default function App() {
 
   // ステップ状態 (1, 2, 3)
   const [step, setStep] = useState(1);
+
+  // カウントダウン状態 (null | 3 | 2 | 1 | 'スタート!')
+  const [countdown, setCountdown] = useState(null);
 
   // モーダル表示状態（見本記憶モーダル ＆ レポートモーダル）
   const [isSampleViewModalOpen, setIsSampleViewModalOpen] = useState(false);
@@ -62,7 +59,7 @@ export default function App() {
     if (isRunning) {
       timerRef.current = setInterval(() => {
         setElapsedSeconds(
-          Math.floor((Date.now() - startTimeRef.current) / 1000)
+          Math.floor((Date.now() - startTimeRef.current) / 1000),
         );
       }, 1000);
     } else {
@@ -71,7 +68,7 @@ export default function App() {
     return () => clearInterval(timerRef.current);
   }, [isRunning]);
 
-  // 課題カードの選択ハンドラ（クリック即モーダル表示）
+  // 課題カードの選択ハンドラ
   const handleSelectTask = (task) => {
     setSelectedTask(task);
     resetTrainingState();
@@ -83,6 +80,7 @@ export default function App() {
     setElapsedSeconds(0);
     setBackspaceCount(0);
     setBackspaceLogs([]);
+    setCountdown(null);
     if (editorRef.current) {
       editorRef.current.innerHTML = "";
     }
@@ -94,7 +92,28 @@ export default function App() {
     return editorRef.current.innerText || editorRef.current.textContent || "";
   };
 
-  // 【ステップ２】タイピングスタート
+  // カウントダウン開始 ＆ タイピング自動スタート
+  const triggerCountdownAndStart = () => {
+    setStep(2);
+    setIsRunning(false);
+    setCountdown(3);
+
+    setTimeout(() => {
+      setCountdown(2);
+      setTimeout(() => {
+        setCountdown(1);
+        setTimeout(() => {
+          setCountdown("スタート！");
+          setTimeout(() => {
+            setCountdown(null);
+            startTraining();
+          }, 600);
+        }, 1000);
+      }, 1000);
+    }, 1000);
+  };
+
+  // 実タイピングスタート
   const startTraining = () => {
     setIsRunning(true);
     setElapsedSeconds(0);
@@ -130,7 +149,7 @@ export default function App() {
   const handleFinishAndCheck = () => {
     if (!isRunning || elapsedSeconds === 0) {
       alert(
-        "タイピングが開始されていません。「スタート」を押して入力してください。"
+        "タイピングが開始されていません。「スタート」を押して入力してください。",
       );
       return;
     }
@@ -154,7 +173,7 @@ export default function App() {
       typedText,
       cpm,
       bsRate,
-      backspaceCount
+      backspaceCount,
     );
 
     const data = {
@@ -202,7 +221,7 @@ export default function App() {
             </div>
 
             <div className="step-body">
-              {/* 課題カード一覧（active状態/選択中ボタンを削除したシンプル表示） */}
+              {/* 課題カード一覧 */}
               <div className="text-task-grid">
                 {sampleTasks.map((task) => {
                   const previewSnippet = task.content
@@ -242,16 +261,14 @@ export default function App() {
         )}
 
         {/* =========================================================
-            ステップ２：訓練を開始するには「スタート」ボタンをクリックしてください
+            ステップ２：タイピング訓練（カウントダウン 3, 2, 1, スタート!）
            ========================================================= */}
         {step === 2 && (
           <section className="card step-card">
             <div className="step-header">
               <div className="step-header-left">
                 <span className="step-badge">ステップ 2</span>
-                <h2>
-                  訓練を開始するには「スタート」ボタンをクリックしてください。
-                </h2>
+                <h2>タイピング練習</h2>
               </div>
               {selectedTask && (
                 <div className="step2-task-pill">
@@ -259,30 +276,11 @@ export default function App() {
                     課題: <strong>{selectedTask.title}</strong> (
                     {selectedTask.content.length}字)
                   </span>
-                  <button
-                    type="button"
-                    className="btn btn-text btn-sm"
-                    onClick={() => setIsSampleViewModalOpen(true)}
-                  >
-                    <Eye size={15} /> 全文を再確認
-                  </button>
                 </div>
               )}
             </div>
 
             <div className="step-body">
-              {/* スタートボタンエリア */}
-              <div className="step2-start-bar">
-                <button
-                  type="button"
-                  className="btn btn-primary btn-lg btn-start-large"
-                  onClick={startTraining}
-                  disabled={isRunning}
-                >
-                  <Play size={22} /> スタート
-                </button>
-              </div>
-
               {/* Word風タイピング入力フォーム */}
               <div className="editor-card-container">
                 <div className="editor-header-mini">
@@ -300,14 +298,27 @@ export default function App() {
                     className="editor-content tall-editor-content"
                     contentEditable={isRunning}
                     onKeyDown={handleKeyDown}
-                    placeholder="「スタート」ボタンを押すと、記憶した文章をここに入力できます..."
+                    placeholder={
+                      isRunning
+                        ? "記憶した文章をここに入力してください..."
+                        : "カウントダウン完了後、入力が開始できます..."
+                    }
                     suppressContentEditableWarning={true}
                   ></div>
 
-                  {!isRunning && (
+                  {/* カウントダウンオーバーレイ（3, 2, 1, スタート!） */}
+                  {countdown !== null && (
+                    <div className="countdown-overlay">
+                      <div className="countdown-content">
+                        <span className="countdown-number">{countdown}</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {!isRunning && countdown === null && (
                     <div className="editor-overlay">
                       <p>
-                        上の「スタート」ボタンを押して訓練を開始してください
+                        「文章を再確認」またはステップ1で課題を選択してください
                       </p>
                     </div>
                   )}
@@ -317,9 +328,6 @@ export default function App() {
               {/* ステップ３導線：完了ボタン */}
               <div className="step3-finish-bar">
                 <div className="finish-instruction">
-                  <span className="step-badge step-badge-green">
-                    ステップ 3
-                  </span>
                   <h3>
                     入力が完了したら「完了」ボタンをクリックしてください。
                   </h3>
@@ -330,7 +338,8 @@ export default function App() {
                   onClick={handleFinishAndCheck}
                   disabled={!isRunning}
                 >
-                  <CheckCircle size={22} /> 完了（結果を見る）
+                  <CheckCircle size={22} />
+                  完了（結果を見る）
                 </button>
               </div>
             </div>
@@ -369,11 +378,11 @@ export default function App() {
         )}
       </main>
 
-      {/* 練習テキスト記憶ダイアログ（「ステップ2へ進む」ボタンで移行） */}
+      {/* 練習テキスト記憶ダイアログ（カウントダウン自動スタート付き） */}
       <SampleModal
         isOpen={isSampleViewModalOpen}
         onClose={() => setIsSampleViewModalOpen(false)}
-        onProceedToStep2={() => setStep(2)}
+        onProceedToStep2={triggerCountdownAndStart}
         task={selectedTask}
       />
 

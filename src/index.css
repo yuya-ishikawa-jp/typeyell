@@ -4,40 +4,37 @@
 
 :root {
   /* オカヤマエール 公式ブランドカラーパレット */
-  --primary-color: #ea580c; /* 温かみのあるオレンジ */
-  --primary-hover: #c2410c; /* 濃いコーラルオレンジ */
-  --primary-light: #fff7ed; /* ソフトオレンジ・クリーム */
-  --primary-border: #ffedd5; /* やわらかなオレンジ枠線 */
+  --primary-color: #ea580c;        /* 温かみのあるオレンジ */
+  --primary-hover: #c2410c;        /* 濃いコーラルオレンジ */
+  --primary-light: #fff7ed;        /* ソフトオレンジ・クリーム */
+  --primary-border: #ffedd5;       /* やわらかなオレンジ枠線 */
 
-  --secondary-color: #0f766e; /* オカヤマエール ティールグリーン */
-  --secondary-hover: #115e59; /* ディープティール */
-  --secondary-light: #f0fdf4; /* ソフトミント */
+  --secondary-color: #0f766e;      /* オカヤマエール ティールグリーン */
+  --secondary-hover: #115e59;      /* ディープティール */
+  --secondary-light: #f0fdf4;      /* ソフトミント */
 
-  --accent-color: #f59e0b; /* アクセントイエロー */
-  --success-color: #10b981; /* グリーン */
-  --danger-color: #ef4444; /* レッド */
-  --purple-color: #8b5cf6; /* パープル */
+  --accent-color: #f59e0b;         /* アクセントイエロー */
+  --success-color: #10b981;        /* グリーン */
+  --danger-color: #ef4444;         /* レッド */
+  --purple-color: #8b5cf6;         /* パープル */
 
-  --bg-main: #faf9f6; /* 温かみのあるオフホワイト・ペーパーベージュ */
+  --bg-main: #faf9f6;              /* 温かみのあるオフホワイト・ペーパーベージュ */
   --bg-card: #ffffff;
   --bg-input: #ffffff;
-  --text-main: #1c1917; /* 深みのあるダークブラウン・チャコール */
-  --text-muted: #78716c; /* 温かみのあるグレー */
+  --text-main: #1c1917;            /* 深みのあるダークブラウン・チャコール */
+  --text-muted: #78716c;           /* 温かみのあるグレー */
   --border-color: #e7e5e4;
   --border-focus: #ea580c;
 
   --shadow-sm: 0 1px 3px rgba(234, 88, 12, 0.08);
-  --shadow-md:
-    0 4px 12px rgba(234, 88, 12, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
-  --shadow-lg:
-    0 12px 24px rgba(234, 88, 12, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(234, 88, 12, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 12px 24px rgba(234, 88, 12, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
 
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 20px;
 
-  --font-sans:
-    "Inter", "Noto Sans JP", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 body.dark-mode {
@@ -63,9 +60,7 @@ body {
   color: var(--text-main);
   line-height: 1.7;
   min-height: 100vh;
-  transition:
-    background-color 0.3s,
-    color 0.3s;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 /* Header (オカヤマエールスタイル) */
@@ -296,72 +291,6 @@ body {
   gap: 1.5rem;
 }
 
-/* ステップ1 */
-.step1-actions {
-  display: flex;
-  justify-content: center;
-}
-
-.selected-task-info-box {
-  background-color: var(--primary-light);
-  border: 1px solid var(--primary-border);
-  border-radius: var(--radius-md);
-  padding: 1.4rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-}
-
-.selected-task-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.info-label {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--primary-color);
-}
-
-.info-title {
-  font-size: 1.2rem;
-  font-weight: 800;
-  color: var(--text-main);
-}
-
-.info-char-count {
-  font-size: 0.95rem;
-  color: var(--text-muted);
-  font-weight: 600;
-}
-
-.selected-task-snippet {
-  font-size: 0.95rem;
-  color: var(--text-muted);
-  line-height: 1.6;
-  background-color: var(--bg-card);
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-color);
-}
-
-.selected-task-buttons {
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-  margin-top: 0.5rem;
-}
-
-.step-placeholder-text {
-  text-align: center;
-  color: var(--text-muted);
-  padding: 2rem 0;
-  font-size: 1rem;
-}
-
 /* ステップ2 */
 .step2-task-pill {
   background-color: var(--bg-card);
@@ -372,18 +301,6 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-}
-
-.step2-start-bar {
-  display: flex;
-  justify-content: center;
-  padding: 0.5rem 0;
-}
-
-.btn-start-large {
-  font-size: 1.3rem;
-  padding: 0.95rem 3rem;
-  border-radius: 9999px;
 }
 
 .editor-card-container {
@@ -533,7 +450,7 @@ body {
   font-weight: 500;
 }
 
-/* Editor (縦に広く設計) */
+/* Editor */
 .tall-editor-wrapper {
   position: relative;
   min-height: 440px;
@@ -574,6 +491,34 @@ body {
 
 body.dark-mode .editor-overlay {
   background-color: rgba(28, 25, 23, 0.92);
+}
+
+/* カウントダウンアニメーション */
+.countdown-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(250, 249, 246, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  backdrop-filter: blur(4px);
+}
+
+body.dark-mode .countdown-overlay {
+  background-color: rgba(28, 25, 23, 0.95);
+}
+
+.countdown-content {
+  text-align: center;
+}
+
+.countdown-number {
+  font-size: 7rem;
+  font-weight: 900;
+  color: var(--primary-color);
+  text-shadow: 0 4px 20px rgba(234, 88, 12, 0.25);
+  opacity: 1;
 }
 
 .btn {
@@ -643,15 +588,6 @@ body.dark-mode .editor-overlay {
   border-color: var(--secondary-color);
 }
 
-.btn-text {
-  background: transparent;
-  border: none;
-  color: var(--primary-color);
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
 .btn-sm {
   padding: 0.4rem 0.9rem;
   font-size: 0.85rem;
@@ -689,11 +625,6 @@ body.dark-mode .editor-overlay {
   border: 1px solid var(--border-color);
 }
 
-/* 文章選択モーダル */
-.select-modal-dialog {
-  max-width: 860px;
-}
-
 .text-task-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -719,11 +650,6 @@ body.dark-mode .editor-overlay {
   box-shadow: var(--shadow-md);
 }
 
-.task-select-card.selected {
-  border-color: var(--primary-color);
-  background-color: var(--primary-light);
-}
-
 .task-select-card-header {
   display: flex;
   justify-content: space-between;
@@ -739,19 +665,6 @@ body.dark-mode .editor-overlay {
   align-items: center;
 }
 
-.selected-badge {
-  background-color: var(--primary-color);
-  color: #ffffff;
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 0.2rem 0.6rem;
-  border-radius: 9999px;
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  gap: 0.2rem;
-}
-
 .task-select-card-meta {
   font-size: 0.85rem;
   color: var(--text-muted);
@@ -762,11 +675,6 @@ body.dark-mode .editor-overlay {
   color: var(--text-muted);
   line-height: 1.5;
   flex: 1;
-}
-
-.btn-select-this {
-  align-self: flex-end;
-  margin-top: 0.5rem;
 }
 
 /* 見本確認ダイアログ */
@@ -819,12 +727,6 @@ body.dark-mode .editor-overlay {
 .modal-date {
   font-size: 0.85rem;
   color: var(--text-muted);
-}
-
-.modal-actions-top {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
 }
 
 .btn-close {
@@ -889,6 +791,7 @@ body.dark-mode .editor-overlay {
   color: var(--primary-color);
 }
 .accent-green .score-number {
+
   color: var(--secondary-color);
 }
 .accent-purple .score-number {
@@ -1069,7 +972,7 @@ body.dark-mode .insight-box {
     background-color: #ffffff !important;
     color: #000000 !important;
   }
-
+  
   .app-header,
   .main-content,
   .modal-header,
