@@ -27,6 +27,7 @@ export default function App() {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [backspaceCount, setBackspaceCount] = useState(0);
   const [backspaceLogs, setBackspaceLogs] = useState([]);
+  const [typingHistory, setTypingHistory] = useState([]);
 
   // 分析結果データ
   const [resultData, setResultData] = useState(null);
@@ -79,6 +80,7 @@ export default function App() {
     setElapsedSeconds(0);
     setBackspaceCount(0);
     setBackspaceLogs([]);
+    setTypingHistory([{ timeMs: 0, text: "" }]);
     setCountdown(null);
     if (editorRef.current) {
       editorRef.current.innerHTML = "";
@@ -118,6 +120,7 @@ export default function App() {
     setElapsedSeconds(0);
     setBackspaceCount(0);
     setBackspaceLogs([]);
+    setTypingHistory([{ timeMs: 0, text: "" }]);
     startTimeRef.current = Date.now();
 
     if (editorRef.current) {
@@ -126,6 +129,14 @@ export default function App() {
         editorRef.current.focus();
       }, 50);
     }
+  };
+
+  // 入力ログ記録ハンドラ
+  const handleInput = () => {
+    if (!isRunning || !startTimeRef.current) return;
+    const timeMs = Date.now() - startTimeRef.current;
+    const text = getPlainText();
+    setTypingHistory((prev) => [...prev, { timeMs, text }]);
   };
 
   // キー入力ハンドラ
@@ -157,6 +168,11 @@ export default function App() {
 
     const typedText = getPlainText();
     const targetText = selectedTask ? selectedTask.content : "";
+    const finalTimeMs = Date.now() - startTimeRef.current;
+    const finalHistory = [
+      ...typingHistory,
+      { timeMs: finalTimeMs, text: typedText },
+    ];
 
     const diff = computeTextDiff(targetText, typedText);
     const minutes = elapsedSeconds / 60;
@@ -182,6 +198,7 @@ export default function App() {
       typedText,
       backspaceCount,
       backspaceLogs,
+      typingHistory: finalHistory,
       insights,
       errStart,
       errMid,
@@ -306,6 +323,7 @@ export default function App() {
                     className="editor-content tall-editor-content"
                     contentEditable={isRunning}
                     onKeyDown={handleKeyDown}
+                    onInput={handleInput}
                     placeholder={
                       isRunning
                         ? "記憶した文章をここに入力してください..."

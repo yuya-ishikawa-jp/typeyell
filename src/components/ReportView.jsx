@@ -13,6 +13,7 @@ import {
 } from "chart.js";
 import { Bar, Line } from "react-chartjs-2";
 import { RotateCcw, Save } from "lucide-react";
+import TypingReplayPlayer from "./TypingReplayPlayer";
 
 ChartJS.register(
   CategoryScale,
@@ -43,6 +44,7 @@ export default function ReportView({ resultData, onRestart }) {
     typedText,
     backspaceCount,
     backspaceLogs,
+    typingHistory = [],
     insights,
     errStart,
     errMid,
@@ -385,6 +387,12 @@ export default function ReportView({ resultData, onRestart }) {
           </div>
         </div>
       </div>
+
+      {/* 動画風入力リプレイプレイヤー (2〜30倍速対応) */}
+      <TypingReplayPlayer
+        typingHistory={typingHistory}
+        totalDurationSeconds={elapsedSeconds}
+      />
 
       {/* 総合スコア */}
       <div className="score-grid">
