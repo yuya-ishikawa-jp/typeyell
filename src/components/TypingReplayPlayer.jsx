@@ -120,8 +120,18 @@ export default function TypingReplayPlayer({ typingHistory = [], totalDurationSe
             <span>{displayedText.length} 文字</span>
           </div>
           <div ref={screenContentRef} className="replay-screen-content">
-            <span className="replay-text-content">{displayedText}</span>
-            <span className="replay-cursor">|</span>
+            {displayedText.split('\n').map((lineText, lineIdx, arr) => {
+              const isLastLine = lineIdx === arr.length - 1;
+              return (
+                <div key={lineIdx} className="replay-line-row">
+                  <span className="replay-line-number">{lineIdx + 1}</span>
+                  <div className="replay-line-text">
+                    <span className="replay-text-content">{lineText}</span>
+                    {isLastLine && <span className="replay-cursor">|</span>}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 

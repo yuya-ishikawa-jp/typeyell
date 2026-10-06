@@ -70,200 +70,147 @@ export default function ReportView({ resultData, onRestart }) {
     }, 50);
   };
 
-  const renderTargetAlignment = () => {
-    return diff.alignment.map((item, idx) => {
-      if (item.type === "correct") {
-        if (item.char === "\n") {
-          return (
-            <React.Fragment key={idx}>
-              <span className="diff-char-break">↵</span>
-              <br />
-            </React.Fragment>
-          );
-        }
-        return (
-          <span key={idx} className="diff-char-correct">
-            {item.char}
-          </span>
-        );
+  const getAlignmentLines = (alignment) => {
+    const lines = [[]];
+    alignment.forEach((item) => {
+      lines[lines.length - 1].push(item);
+      const isBreak =
+        (item.type === "correct" && item.char === "\n") ||
+        (item.type === "typo" &&
+          (item.charTarget === "\n" || item.charTyped === "\n")) ||
+        (item.type === "missing" && item.char === "\n") ||
+        (item.type === "extra" && item.char === "\n");
+      if (isBreak) {
+        lines.push([]);
       }
-
-      if (item.type === "typo") {
-        const displayChar = item.charTarget === "\n" ? "↵" : item.charTarget;
-        const typedHint = item.charTyped === "\n" ? "改行" : item.charTyped;
-        if (item.charTarget === "\n") {
-          return (
-            <React.Fragment key={idx}>
-              <span
-                className="diff-char-typo diff-char-break"
-                title={`入力ミス: 「${typedHint}」`}
-              >
-                ↵
-              </span>
-              <br />
-            </React.Fragment>
-          );
-        }
-        return (
-          <span
-            key={idx}
-            className="diff-char-typo"
-            title={`入力誤り: あなたの入力は「${typedHint}」`}
-          >
-            {displayChar}
-          </span>
-        );
-      }
-
-      if (item.type === "missing") {
-        const displayChar = item.char === "\n" ? "↵" : item.char;
-        if (item.char === "\n") {
-          return (
-            <React.Fragment key={idx}>
-              <span
-                className="diff-char-missing diff-char-break"
-                title="脱字（改行未入力）"
-              >
-                ↵
-              </span>
-              <br />
-            </React.Fragment>
-          );
-        }
-        return (
-          <span
-            key={idx}
-            className="diff-char-missing"
-            title={`脱字: 「${item.char}」`}
-          >
-            {displayChar}
-          </span>
-        );
-      }
-
-      if (item.type === "extra") {
-        if (item.char === "\n") {
-          return (
-            <React.Fragment key={idx}>
-              <span
-                className="diff-spacer diff-spacer-extra diff-spacer-break"
-                title="入力側に余分な改行"
-              >
-                &nbsp;
-              </span>
-              <br />
-            </React.Fragment>
-          );
-        }
-        return (
-          <span
-            key={idx}
-            className="diff-spacer diff-spacer-extra"
-            title="入力側に不要な文字"
-          >
-            &nbsp;
-          </span>
-        );
-      }
-
-      return null;
     });
+    return lines;
   };
 
-  const renderTypedAlignment = () => {
-    return diff.alignment.map((item, idx) => {
-      if (item.type === "correct") {
-        if (item.char === "\n") {
-          return (
-            <React.Fragment key={idx}>
-              <span className="diff-char-break">↵</span>
-              <br />
-            </React.Fragment>
-          );
-        }
-        return (
-          <span key={idx} className="diff-char-correct">
-            {item.char}
-          </span>
-        );
-      }
+  const renderTargetAlignmentLines = () => {
+    const lines = getAlignmentLines(diff.alignment);
+    return lines.map((lineItems, lineIdx) => (
+      <div key={lineIdx} className="diff-line-row">
+        <span className="diff-line-number">{lineIdx + 1}</span>
+        <div className="diff-line-content">
+          {lineItems.map((item, idx) => {
+            if (item.type === "correct") {
+              if (item.char === "\n")
+                return <span key={idx} className="diff-char-break">↵</span>;
+              return (
+                <span key={idx} className="diff-char-correct">
+                  {item.char}
+                </span>
+              );
+            }
 
-      if (item.type === "typo") {
-        const displayChar = item.charTyped === "\n" ? "↵" : item.charTyped;
-        const targetHint = item.charTarget === "\n" ? "改行" : item.charTarget;
-        if (item.charTyped === "\n") {
-          return (
-            <React.Fragment key={idx}>
-              <span
-                className="diff-char-typo diff-char-break"
-                title={`正解: 「${targetHint}」`}
-              >
-                ↵
-              </span>
-              <br />
-            </React.Fragment>
-          );
-        }
-        return (
-          <span
-            key={idx}
-            className="diff-char-typo"
-            title={`打鍵ミス: 本来は「${targetHint}」`}
-          >
-            {displayChar}
-          </span>
-        );
-      }
+            if (item.type === "typo") {
+              const displayChar = item.charTarget === "\n" ? "↵" : item.charTarget;
+              const typedHint = item.charTyped === "\n" ? "改行" : item.charTyped;
+              return (
+                <span
+                  key={idx}
+                  className={`diff-char-typo ${item.charTarget === "\n" ? "diff-char-break" : ""}`}
+                  title={`入力誤り: あなたの入力は「${typedHint}」`}
+                >
+                  {displayChar}
+                </span>
+              );
+            }
 
-      if (item.type === "missing") {
-        if (item.char === "\n") {
-          return (
-            <React.Fragment key={idx}>
-              <span
-                className="diff-spacer diff-spacer-missing diff-spacer-break"
-                title="脱字（未入力の改行）"
-              >
-                &nbsp;
-              </span>
-              <br />
-            </React.Fragment>
-          );
-        }
-        return (
-          <span
-            key={idx}
-            className="diff-spacer diff-spacer-missing"
-            title={`脱字: 本来は「${item.char}」`}
-          >
-            &nbsp;
-          </span>
-        );
-      }
+            if (item.type === "missing") {
+              const displayChar = item.char === "\n" ? "↵" : item.char;
+              return (
+                <span
+                  key={idx}
+                  className={`diff-char-missing ${item.char === "\n" ? "diff-char-break" : ""}`}
+                  title={`脱字: 「${item.char}」`}
+                >
+                  {displayChar}
+                </span>
+              );
+            }
 
-      if (item.type === "extra") {
-        const displayChar = item.char === "\n" ? "↵" : item.char;
-        if (item.char === "\n") {
-          return (
-            <React.Fragment key={idx}>
-              <span
-                className="diff-char-extra diff-char-break"
-                title="不要な改行"
-              >
-                ↵
-              </span>
-              <br />
-            </React.Fragment>
-          );
-        }
-        return (
-          <span key={idx} className="diff-char-extra" title="不要な文字">
-            {displayChar}
-          </span>
-        );
-      }
+            if (item.type === "extra") {
+              return (
+                <span
+                  key={idx}
+                  className={`diff-spacer diff-spacer-extra ${item.char === "\n" ? "diff-spacer-break" : ""}`}
+                  title="入力側に不要な文字"
+                >
+                  &nbsp;
+                </span>
+              );
+            }
 
-      return null;
-    });
+            return null;
+          })}
+        </div>
+      </div>
+    ));
+  };
+
+  const renderTypedAlignmentLines = () => {
+    const lines = getAlignmentLines(diff.alignment);
+    return lines.map((lineItems, lineIdx) => (
+      <div key={lineIdx} className="diff-line-row">
+        <span className="diff-line-number">{lineIdx + 1}</span>
+        <div className="diff-line-content">
+          {lineItems.map((item, idx) => {
+            if (item.type === "correct") {
+              if (item.char === "\n")
+                return <span key={idx} className="diff-char-break">↵</span>;
+              return (
+                <span key={idx} className="diff-char-correct">
+                  {item.char}
+                </span>
+              );
+            }
+
+            if (item.type === "typo") {
+              const displayChar = item.charTyped === "\n" ? "↵" : item.charTyped;
+              const targetHint = item.charTarget === "\n" ? "改行" : item.charTarget;
+              return (
+                <span
+                  key={idx}
+                  className={`diff-char-typo ${item.charTyped === "\n" ? "diff-char-break" : ""}`}
+                  title={`打鍵ミス: 本来は「${targetHint}」`}
+                >
+                  {displayChar}
+                </span>
+              );
+            }
+
+            if (item.type === "missing") {
+              return (
+                <span
+                  key={idx}
+                  className={`diff-spacer diff-spacer-missing ${item.char === "\n" ? "diff-spacer-break" : ""}`}
+                  title={`脱字: 本来は「${item.char}」`}
+                >
+                  &nbsp;
+                </span>
+              );
+            }
+
+            if (item.type === "extra") {
+              const displayChar = item.char === "\n" ? "↵" : item.char;
+              return (
+                <span
+                  key={idx}
+                  className={`diff-char-extra ${item.char === "\n" ? "diff-char-break" : ""}`}
+                  title="不要な文字"
+                >
+                  {displayChar}
+                </span>
+              );
+            }
+
+            return null;
+          })}
+        </div>
+      </div>
+    ));
   };
 
   const now = new Date();
@@ -368,7 +315,7 @@ export default function ReportView({ resultData, onRestart }) {
               className="diff-pane-content"
               onScroll={() => handleScroll("target")}
             >
-              {renderTargetAlignment()}
+              {renderTargetAlignmentLines()}
             </div>
           </div>
 
@@ -382,7 +329,7 @@ export default function ReportView({ resultData, onRestart }) {
               className="diff-pane-content"
               onScroll={() => handleScroll("typed")}
             >
-              {renderTypedAlignment()}
+              {renderTypedAlignmentLines()}
             </div>
           </div>
         </div>
