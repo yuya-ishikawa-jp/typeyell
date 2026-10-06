@@ -209,7 +209,7 @@ export default function App() {
     setStep(3);
   };
 
-  // ステップ1へ戻る（新しい訓練）
+  // ステップ1へ戻る（新しい練習）
   const handleRestartAll = () => {
     resetTrainingState();
     setSelectedTask(null);
@@ -276,7 +276,7 @@ export default function App() {
         )}
 
         {/* =========================================================
-            ステップ２：タイピング訓練
+            ステップ２：タイピング練習
            ========================================================= */}
         {step === 2 && (
           <section className="card step-card">

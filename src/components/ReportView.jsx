@@ -313,7 +313,14 @@ export default function ReportView({ resultData, onRestart }) {
     <div className="report-view-container" id="printable-report">
       {/* アクションバー（上部） */}
       <div className="report-view-actions">
-        <span className="report-view-date">実施日時: {dateStr}</span>
+        <div className="report-view-meta">
+          <div className="report-view-date">📅 実施日時: {dateStr}</div>
+          <div className="report-view-task">
+            <span>📝 課題名: {task?.title || "自由タイピング"}</span>
+            <span className="task-meta-divider">|</span>
+            <span>文字数: {typedText.length}文字</span>
+          </div>
+        </div>
       </div>
 
       {/* サマリーセクション（一番上） */}
@@ -324,6 +331,15 @@ export default function ReportView({ resultData, onRestart }) {
 
         {/* 総合スコア */}
         <div className="score-grid">
+          <div className="score-card accent-purple">
+            <span className="score-title">所要時間</span>
+            <span className="score-number">
+              {mins}:{secs}
+            </span>
+            {elapsedSeconds >= 60 && (
+              <span className="score-sub">{elapsedSeconds}秒</span>
+            )}
+          </div>
           <div className="score-card accent-blue">
             <span className="score-title">総合正確率</span>
             <span className="score-number">{diff.accuracy}%</span>
@@ -336,17 +352,11 @@ export default function ReportView({ resultData, onRestart }) {
             <span className="score-number">{cpm}</span>
             <span className="score-sub">文字/分 (CPM)</span>
           </div>
-          <div className="score-card accent-purple">
-            <span className="score-title">所要時間</span>
-            <span className="score-number">
-              {mins}:{secs}
-            </span>
-            <span className="score-sub">総文字数: {typedText.length}文字</span>
-          </div>
+
           <div className="score-card accent-orange">
             <span className="score-title">Backspace修正</span>
-            <span className="score-number">{backspaceCount}回</span>
-            <span className="score-sub">100文字あたり {bsRate}回</span>
+            <span className="score-number">{bsRate}</span>
+            <span className="score-sub">回/100文字</span>
           </div>
         </div>
 
@@ -427,7 +437,7 @@ export default function ReportView({ resultData, onRestart }) {
           className="btn btn-secondary btn-lg"
           onClick={onRestart}
         >
-          <RotateCcw size={18} /> 次の訓練を開始する（ステップ1へ）
+          <RotateCcw size={18} /> 次の練習を開始する（ステップ1へ）
         </button>
       </div>
     </div>

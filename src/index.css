@@ -1182,10 +1182,38 @@ body.dark-mode .insight-box {
   border-bottom: 1px solid var(--border-color);
 }
 
+.report-view-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
 .report-view-date {
   font-size: 0.9rem;
   color: var(--text-muted);
   font-weight: 600;
+}
+
+.report-view-task {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.task-meta-divider {
+  color: var(--text-muted);
+  font-weight: 400;
+  opacity: 0.6;
+}
+
+.score-number-sm {
+  font-size: 1.65rem;
+  font-weight: 800;
+  white-space: nowrap;
 }
 
 .report-summary-section {

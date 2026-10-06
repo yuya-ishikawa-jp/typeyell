@@ -1,11 +1,11 @@
-import React from 'react';
-import { CheckCircle2 } from 'lucide-react';
+import React from "react";
+import { CheckCircle2 } from "lucide-react";
 
 export default function StepBar({ currentStep, onStepClick }) {
   const steps = [
-    { number: 1, title: 'ステップ１', desc: '文章の選択' },
-    { number: 2, title: 'ステップ２', desc: 'タイピング訓練' },
-    { number: 3, title: 'ステップ３', desc: '結果確認・分析' }
+    { number: 1, title: "ステップ１", desc: "文章の選択" },
+    { number: 2, title: "ステップ２", desc: "タイピング練習" },
+    { number: 3, title: "ステップ３", desc: "結果確認・分析" },
   ];
 
   return (
@@ -18,7 +18,7 @@ export default function StepBar({ currentStep, onStepClick }) {
           return (
             <div
               key={step.number}
-              className={`step-item ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}`}
+              className={`step-item ${isActive ? "active" : ""} ${isCompleted ? "completed" : ""}`}
             >
               <div className="step-number-badge">
                 {isCompleted ? <CheckCircle2 size={20} /> : step.number}

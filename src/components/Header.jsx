@@ -10,7 +10,7 @@ export default function Header({ isDarkMode, setIsDarkMode }) {
           <div>
             <h1 className="app-title">TypeYell（タイプエール）</h1>
             <p className="app-subtitle">
-              あなたの「働きたい」にエールを。タイピング練習支援アプリ
+              あなたの「働きたい」にエールを。タイピング練習・分析支援アプリ
             </p>
           </div>
         </div>
