@@ -3,7 +3,7 @@ import Header from "./components/Header";
 import StepBar from "./components/StepBar";
 import SampleModal from "./components/SampleModal";
 import WordToolbar from "./components/WordToolbar";
-import ReportModal from "./components/ReportModal";
+import ReportView from "./components/ReportView";
 import { fetchSampleTasks } from "./utils/sampleLoader";
 import { computeTextDiff, generateInsights } from "./utils/diffEngine";
 import { FileText, CheckCircle, RotateCcw } from "lucide-react";
@@ -19,9 +19,8 @@ export default function App() {
   // カウントダウン状態 (null | 3 | 2 | 1 | 'スタート!')
   const [countdown, setCountdown] = useState(null);
 
-  // モーダル表示状態（見本記憶モーダル ＆ レポートモーダル）
+  // モーダル表示状態（見本記憶モーダル）
   const [isSampleViewModalOpen, setIsSampleViewModalOpen] = useState(false);
-  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
   // タイマー ＆ 入力ステート
   const [isRunning, setIsRunning] = useState(false);
@@ -145,7 +144,7 @@ export default function App() {
     }
   };
 
-  // 【ステップ３】完了＆結果表示
+  // 【ステップ３】完了＆結果直接表示
   const handleFinishAndCheck = () => {
     if (!isRunning || elapsedSeconds === 0) {
       alert(
@@ -191,7 +190,6 @@ export default function App() {
 
     setResultData(data);
     setStep(3);
-    setIsReportModalOpen(true);
   };
 
   // ステップ1へ戻る（新しい訓練）
@@ -199,7 +197,7 @@ export default function App() {
     resetTrainingState();
     setSelectedTask(null);
     setStep(1);
-    setIsReportModalOpen(false);
+    setResultData(null);
   };
 
   return (
@@ -261,7 +259,7 @@ export default function App() {
         )}
 
         {/* =========================================================
-            ステップ２：タイピング訓練（カウントダウン 3, 2, 1, スタート!）
+            ステップ２：タイピング訓練
            ========================================================= */}
         {step === 2 && (
           <section className="card step-card">
@@ -270,14 +268,24 @@ export default function App() {
                 <span className="step-badge">ステップ 2</span>
                 <h2>タイピング練習</h2>
               </div>
-              {selectedTask && (
-                <div className="step2-task-pill">
-                  <span>
-                    課題: <strong>{selectedTask.title}</strong> (
-                    {selectedTask.content.length}字)
-                  </span>
-                </div>
-              )}
+              <div className="step-header-right">
+                {selectedTask && (
+                  <div className="step2-task-pill">
+                    <span>
+                      課題: <strong>{selectedTask.title}</strong> (
+                      {selectedTask.content.length}字)
+                    </span>
+                  </div>
+                )}
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  onClick={handleFinishAndCheck}
+                  disabled={!isRunning}
+                >
+                  <CheckCircle size={18} /> 完了（結果を見る）
+                </button>
+              </div>
             </div>
 
             <div className="step-body">
@@ -317,37 +325,17 @@ export default function App() {
 
                   {!isRunning && countdown === null && (
                     <div className="editor-overlay">
-                      <p>
-                        「文章を再確認」またはステップ1で課題を選択してください
-                      </p>
+                      <p>ステップ1で課題を選択するとタイピングが開始できます</p>
                     </div>
                   )}
                 </div>
-              </div>
-
-              {/* ステップ３導線：完了ボタン */}
-              <div className="step3-finish-bar">
-                <div className="finish-instruction">
-                  <h3>
-                    入力が完了したら「完了」ボタンをクリックしてください。
-                  </h3>
-                </div>
-                <button
-                  type="button"
-                  className="btn btn-success btn-lg btn-finish-large"
-                  onClick={handleFinishAndCheck}
-                  disabled={!isRunning}
-                >
-                  <CheckCircle size={22} />
-                  完了（結果を見る）
-                </button>
               </div>
             </div>
           </section>
         )}
 
         {/* =========================================================
-            ステップ３：結果レポート表示
+            ステップ３：成果・分析レポート（画面に直接表示）
            ========================================================= */}
         {step === 3 && resultData && (
           <section className="card step-card">
@@ -363,34 +351,22 @@ export default function App() {
               </button>
             </div>
             <div className="step-body">
-              <p className="step3-notice">
-                「結果を見る」モーダル、または下記の詳細分析結果をご確認ください。
-              </p>
-              <button
-                type="button"
-                className="btn btn-primary btn-lg"
-                onClick={() => setIsReportModalOpen(true)}
-              >
-                📊 レポート詳細画面を再表示する
-              </button>
+              {/* レポート画面を直接埋め込み */}
+              <ReportView
+                resultData={resultData}
+                onRestart={handleRestartAll}
+              />
             </div>
           </section>
         )}
       </main>
 
-      {/* 練習テキスト記憶ダイアログ（カウントダウン自動スタート付き） */}
+      {/* 練習テキスト記憶ダイアログ */}
       <SampleModal
         isOpen={isSampleViewModalOpen}
         onClose={() => setIsSampleViewModalOpen(false)}
         onProceedToStep2={triggerCountdownAndStart}
         task={selectedTask}
-      />
-
-      {/* ステップ３：分析・レポートモーダル */}
-      <ReportModal
-        isOpen={isReportModalOpen}
-        onClose={() => setIsReportModalOpen(false)}
-        resultData={resultData}
       />
     </div>
   );

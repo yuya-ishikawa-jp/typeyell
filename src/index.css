@@ -4,37 +4,40 @@
 
 :root {
   /* オカヤマエール 公式ブランドカラーパレット */
-  --primary-color: #ea580c;        /* 温かみのあるオレンジ */
-  --primary-hover: #c2410c;        /* 濃いコーラルオレンジ */
-  --primary-light: #fff7ed;        /* ソフトオレンジ・クリーム */
-  --primary-border: #ffedd5;       /* やわらかなオレンジ枠線 */
+  --primary-color: #ea580c; /* 温かみのあるオレンジ */
+  --primary-hover: #c2410c; /* 濃いコーラルオレンジ */
+  --primary-light: #fff7ed; /* ソフトオレンジ・クリーム */
+  --primary-border: #ffedd5; /* やわらかなオレンジ枠線 */
 
-  --secondary-color: #0f766e;      /* オカヤマエール ティールグリーン */
-  --secondary-hover: #115e59;      /* ディープティール */
-  --secondary-light: #f0fdf4;      /* ソフトミント */
+  --secondary-color: #0f766e; /* オカヤマエール ティールグリーン */
+  --secondary-hover: #115e59; /* ディープティール */
+  --secondary-light: #f0fdf4; /* ソフトミント */
 
-  --accent-color: #f59e0b;         /* アクセントイエロー */
-  --success-color: #10b981;        /* グリーン */
-  --danger-color: #ef4444;         /* レッド */
-  --purple-color: #8b5cf6;         /* パープル */
+  --accent-color: #f59e0b; /* アクセントイエロー */
+  --success-color: #10b981; /* グリーン */
+  --danger-color: #ef4444; /* レッド */
+  --purple-color: #8b5cf6; /* パープル */
 
-  --bg-main: #faf9f6;              /* 温かみのあるオフホワイト・ペーパーベージュ */
+  --bg-main: #faf9f6; /* 温かみのあるオフホワイト・ペーパーベージュ */
   --bg-card: #ffffff;
   --bg-input: #ffffff;
-  --text-main: #1c1917;            /* 深みのあるダークブラウン・チャコール */
-  --text-muted: #78716c;           /* 温かみのあるグレー */
+  --text-main: #1c1917; /* 深みのあるダークブラウン・チャコール */
+  --text-muted: #78716c; /* 温かみのあるグレー */
   --border-color: #e7e5e4;
   --border-focus: #ea580c;
 
   --shadow-sm: 0 1px 3px rgba(234, 88, 12, 0.08);
-  --shadow-md: 0 4px 12px rgba(234, 88, 12, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
-  --shadow-lg: 0 12px 24px rgba(234, 88, 12, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md:
+    0 4px 12px rgba(234, 88, 12, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-lg:
+    0 12px 24px rgba(234, 88, 12, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
 
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 20px;
 
-  --font-sans: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans:
+    "Inter", "Noto Sans JP", -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 body.dark-mode {
@@ -60,7 +63,9 @@ body {
   color: var(--text-main);
   line-height: 1.7;
   min-height: 100vh;
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
 
 /* Header (オカヤマエールスタイル) */
@@ -251,7 +256,7 @@ body {
   background-color: var(--primary-light);
   border-bottom: 1px solid var(--primary-border);
   display: flex;
-  justify-content: start;
+  justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
@@ -261,6 +266,13 @@ body {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.step-header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   flex-wrap: wrap;
 }
 
@@ -327,7 +339,7 @@ body {
   border-radius: var(--radius-md);
   padding: 1.4rem;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
@@ -791,7 +803,6 @@ body.dark-mode .countdown-overlay {
   color: var(--primary-color);
 }
 .accent-green .score-number {
-
   color: var(--secondary-color);
 }
 .accent-purple .score-number {
@@ -972,7 +983,7 @@ body.dark-mode .insight-box {
     background-color: #ffffff !important;
     color: #000000 !important;
   }
-  
+
   .app-header,
   .main-content,
   .modal-header,
@@ -1032,4 +1043,42 @@ body.dark-mode .insight-box {
     background: #fff !important;
     resize: none;
   }
+}
+
+/* Inline Report View (ステップ3画面用) */
+.report-view-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.report-view-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.report-view-date {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.report-view-btn-group {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.report-view-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-color);
+  flex-wrap: wrap;
 }
