@@ -1,62 +1,62 @@
 [
   {
-    "id": "yukidaruma",
-    "title": "雪だるま",
-    "file": "/text-samples/01.yukidaruma.txt"
-  },
-  {
-    "id": "idachannohana",
-    "title": "イーダちゃんの花",
-    "file": "/text-samples/02.idachannohana.txt"
-  },
-  {
-    "id": "nenposei",
-    "title": "年俸制に関する文章",
-    "file": "/text-samples/03.nenposei.txt"
-  },
-  {
-    "id": "sekiyu",
-    "title": "石油とエネルギーに関する文章",
-    "file": "/text-samples/04.sekiyu.txt"
-  },
-  {
-    "id": "konbini",
-    "title": "コンビニエンスストアに関する文章",
-    "file": "/text-samples/05.konbini.txt"
-  },
-  {
-    "id": "orora",
-    "title": "オーロラに関する文章",
-    "file": "/text-samples/06.orora.txt"
-  },
-  {
-    "id": "sobatoyudachi(kanji)",
-    "title": "ソバとゆうだち（漢字）",
-    "file": "/text-samples/07.sobatoyudachi(kanji).txt"
-  },
-  {
-    "id": "sobatoyudachi(kana)",
-    "title": "ソバとゆうだち（かな）",
-    "file": "/text-samples/08.sobatoyudachi(kana).txt"
-  },
-  {
     "id": "aioeo",
-    "title": "あいうえお",
+    "title": "[しょきゅう・ひらがな]あいうえお",
     "file": "/text-samples/aiueo.txt"
   },
   {
-    "id": "tango(kanji)",
-    "title": "単語（漢字）",
-    "file": "/text-samples/tango(kanji).txt"
-  },
-  {
     "id": "tango(kana)",
-    "title": "単語（かな）",
+    "title": "[しょきゅう・ひらがな]ことば　その１",
     "file": "/text-samples/tango(kana).txt"
   },
   {
     "id": "tango2(kana)",
-    "title": "単語２（かな）",
+    "title": "[しょきゅう・ひらがな]ことば　その２",
     "file": "/text-samples/tang2(kana).txt"
+  },
+  {
+    "id": "sobatoyudachi(kana)",
+    "title": "[しょきゅう・カタカナ]ソバとゆうだち",
+    "file": "/text-samples/08.sobatoyudachi(kana).txt"
+  },
+  {
+    "id": "tango(kanji)",
+    "title": "[初級・漢字]言葉",
+    "file": "/text-samples/tango(kanji).txt"
+  },
+  {
+    "id": "sobatoyudachi(kanji)",
+    "title": "[中級・漢字]ソバとゆうだち",
+    "file": "/text-samples/07.sobatoyudachi(kanji).txt"
+  },
+  {
+    "id": "idachannohana",
+    "title": "[中級・漢字]イーダちゃんの花",
+    "file": "/text-samples/02.idachannohana.txt"
+  },
+  {
+    "id": "yukidaruma",
+    "title": "[上級]雪だるま",
+    "file": "/text-samples/01.yukidaruma.txt"
+  },
+  {
+    "id": "nenposei",
+    "title": "[上級]年俸制に関する文章",
+    "file": "/text-samples/03.nenposei.txt"
+  },
+  {
+    "id": "sekiyu",
+    "title": "[上級]石油とエネルギーに関する文章",
+    "file": "/text-samples/04.sekiyu.txt"
+  },
+  {
+    "id": "konbini",
+    "title": "[上級]コンビニエンスストアに関する文章",
+    "file": "/text-samples/05.konbini.txt"
+  },
+  {
+    "id": "orora",
+    "title": "[上級]オーロラに関する文章",
+    "file": "/text-samples/06.orora.txt"
   }
 ]
