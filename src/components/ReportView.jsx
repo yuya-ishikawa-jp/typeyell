@@ -96,7 +96,11 @@ export default function ReportView({ resultData, onRestart }) {
           {lineItems.map((item, idx) => {
             if (item.type === "correct") {
               if (item.char === "\n")
-                return <span key={idx} className="diff-char-break">↵</span>;
+                return (
+                  <span key={idx} className="diff-char-break">
+                    ↵
+                  </span>
+                );
               return (
                 <span key={idx} className="diff-char-correct">
                   {item.char}
@@ -105,8 +109,10 @@ export default function ReportView({ resultData, onRestart }) {
             }
 
             if (item.type === "typo") {
-              const displayChar = item.charTarget === "\n" ? "↵" : item.charTarget;
-              const typedHint = item.charTyped === "\n" ? "改行" : item.charTyped;
+              const displayChar =
+                item.charTarget === "\n" ? "↵" : item.charTarget;
+              const typedHint =
+                item.charTyped === "\n" ? "改行" : item.charTyped;
               return (
                 <span
                   key={idx}
@@ -159,7 +165,11 @@ export default function ReportView({ resultData, onRestart }) {
           {lineItems.map((item, idx) => {
             if (item.type === "correct") {
               if (item.char === "\n")
-                return <span key={idx} className="diff-char-break">↵</span>;
+                return (
+                  <span key={idx} className="diff-char-break">
+                    ↵
+                  </span>
+                );
               return (
                 <span key={idx} className="diff-char-correct">
                   {item.char}
@@ -168,8 +178,10 @@ export default function ReportView({ resultData, onRestart }) {
             }
 
             if (item.type === "typo") {
-              const displayChar = item.charTyped === "\n" ? "↵" : item.charTyped;
-              const targetHint = item.charTarget === "\n" ? "改行" : item.charTarget;
+              const displayChar =
+                item.charTyped === "\n" ? "↵" : item.charTyped;
+              const targetHint =
+                item.charTarget === "\n" ? "改行" : item.charTarget;
               return (
                 <span
                   key={idx}
@@ -304,7 +316,64 @@ export default function ReportView({ resultData, onRestart }) {
         <span className="report-view-date">実施日時: {dateStr}</span>
       </div>
 
-      {/* 左右分割 差分表示（一番上） */}
+      {/* サマリーセクション（一番上） */}
+      <div className="report-summary-section">
+        <div className="summary-section-header">
+          <h3>📊 サマリー</h3>
+        </div>
+
+        {/* 総合スコア */}
+        <div className="score-grid">
+          <div className="score-card accent-blue">
+            <span className="score-title">総合正確率</span>
+            <span className="score-number">{diff.accuracy}%</span>
+            <span className="score-sub">
+              誤字: {diff.typoCount} / 脱字: {diff.missingCount}
+            </span>
+          </div>
+          <div className="score-card accent-green">
+            <span className="score-title">タイピング速度</span>
+            <span className="score-number">{cpm}</span>
+            <span className="score-sub">文字/分 (CPM)</span>
+          </div>
+          <div className="score-card accent-purple">
+            <span className="score-title">所要時間</span>
+            <span className="score-number">
+              {mins}:{secs}
+            </span>
+            <span className="score-sub">総文字数: {typedText.length}文字</span>
+          </div>
+          <div className="score-card accent-orange">
+            <span className="score-title">Backspace修正</span>
+            <span className="score-number">{backspaceCount}回</span>
+            <span className="score-sub">100文字あたり {bsRate}回</span>
+          </div>
+        </div>
+
+        {/* グラフ */}
+        <div className="charts-grid">
+          <div className="chart-card">
+            <h4>📍 お手本の行ごとの誤り発生数（行別エラー分布）</h4>
+            <div className="chart-container">
+              <Bar data={barData} options={barOptions} />
+            </div>
+            <p className="chart-desc">
+              ※どの行（何行目）で誤り（誤字・脱字）が多く発生したかを可視化します。
+            </p>
+          </div>
+          <div className="chart-card">
+            <h4>⏱️ 時間経過とBackspace（修正）回数の推移</h4>
+            <div className="chart-container">
+              <Line data={lineData} options={lineOptions} />
+            </div>
+            <p className="chart-desc">
+              ※入力中にどのようなタイミングで迷いや修正が発生したかを示します。
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* 左右分割 差分表示 */}
       <div className="diff-section">
         <div className="diff-section-header">
           <h3>🔍 誤り箇所の比較チェック</h3>
@@ -346,63 +415,12 @@ export default function ReportView({ resultData, onRestart }) {
         </div>
       </div>
 
-      {/* 動画風入力リプレイプレイヤー (2〜30倍速対応) */}
+      {/* 動画風入力リプレイプレイヤー (囲み枠なし) */}
       <TypingReplayPlayer
         typingHistory={typingHistory}
         totalDurationSeconds={elapsedSeconds}
       />
 
-      {/* 総合スコア */}
-      <div className="score-grid">
-        <div className="score-card accent-blue">
-          <span className="score-title">総合正確率</span>
-          <span className="score-number">{diff.accuracy}%</span>
-          <span className="score-sub">
-            誤字: {diff.typoCount} / 脱字: {diff.missingCount}
-          </span>
-        </div>
-        <div className="score-card accent-green">
-          <span className="score-title">タイピング速度</span>
-          <span className="score-number">{cpm}</span>
-          <span className="score-sub">文字/分 (CPM)</span>
-        </div>
-        <div className="score-card accent-purple">
-          <span className="score-title">所要時間</span>
-          <span className="score-number">
-            {mins}:{secs}
-          </span>
-          <span className="score-sub">総文字数: {typedText.length}文字</span>
-        </div>
-        <div className="score-card accent-orange">
-          <span className="score-title">Backspace修正</span>
-          <span className="score-number">{backspaceCount}回</span>
-          <span className="score-sub">100文字あたり {bsRate}回</span>
-        </div>
-      </div>
-
-      {/* グラフ */}
-      <div className="charts-grid">
-        <div className="chart-card">
-          <h4>📍 お手本の行ごとの誤り発生数（行別エラー分布）</h4>
-          <div className="chart-container">
-            <Bar data={barData} options={barOptions} />
-          </div>
-          <p className="chart-desc">
-            ※どの行（何行目）で誤り（誤字・脱字）が多く発生したかを可視化します。
-          </p>
-        </div>
-        <div className="chart-card">
-          <h4>⏱️ 時間経過とBackspace（修正）回数の推移</h4>
-          <div className="chart-container">
-            <Line data={lineData} options={lineOptions} />
-          </div>
-          <p className="chart-desc">
-            ※入力中にどのようなタイミングで迷いや修正が発生したかを示します。
-          </p>
-        </div>
-      </div>
-
-      {/* 下部アクションボタン */}
       <div className="report-view-footer">
         <button
           type="button"

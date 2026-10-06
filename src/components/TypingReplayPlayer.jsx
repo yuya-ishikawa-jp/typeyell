@@ -9,7 +9,7 @@ import {
   RotateCcw,
   RotateCw,
   Gauge,
-  ChevronDown
+  ChevronDown,
 } from "lucide-react";
 
 export default function TypingReplayPlayer({
@@ -88,7 +88,14 @@ export default function TypingReplayPlayer({
 
   // 現在時点での打鍵統計を集計
   const getCurrentCounts = () => {
-    const counts = { text: 0, backspace: 0, arrow: 0, space: 0, enter: 0, total: 0 };
+    const counts = {
+      text: 0,
+      backspace: 0,
+      arrow: 0,
+      space: 0,
+      enter: 0,
+      total: 0,
+    };
     if (!typingHistory || typingHistory.length === 0) return counts;
 
     for (let i = 0; i < typingHistory.length; i++) {
@@ -107,7 +114,14 @@ export default function TypingReplayPlayer({
 
   // 最終時点の全体統計（自動診断用）
   const getFinalCounts = () => {
-    const counts = { text: 0, backspace: 0, arrow: 0, space: 0, enter: 0, total: 0 };
+    const counts = {
+      text: 0,
+      backspace: 0,
+      arrow: 0,
+      space: 0,
+      enter: 0,
+      total: 0,
+    };
     if (!typingHistory) return counts;
     typingHistory.forEach((item) => {
       if (item.keyType && counts[item.keyType] !== undefined) {
@@ -133,7 +147,8 @@ export default function TypingReplayPlayer({
     if (finalCounts.arrow >= 5 || arrowRatio > 0.08) {
       return {
         type: "warning",
-        title: "⚠️ カーソル移動（矢印キー: " + finalCounts.arrow + "回）が多めです",
+        title:
+          "⚠️ カーソル移動（矢印キー: " + finalCounts.arrow + "回）が多めです",
         desc: "文章の途中へ戻って修正・挿入を行っている傾向が見られます。「入力し始める前に、一度全体をしっかり見比べる習慣」を意識してみましょう。",
       };
     }
@@ -141,7 +156,10 @@ export default function TypingReplayPlayer({
     if (finalCounts.backspace >= 8 || bsRatio > 0.12) {
       return {
         type: "warning",
-        title: "⚠️ 打鍵修正（Backspace: " + finalCounts.backspace + "回）が多く発生しています",
+        title:
+          "⚠️ 打鍵修正（Backspace: " +
+          finalCounts.backspace +
+          "回）が多く発生しています",
         desc: "直前の打ち間違いをその場で何度も修正しています。ホームポジションを意識し、速度よりも「正確な1音目」を大切に打ち進めましょう。",
       };
     }
@@ -264,21 +282,6 @@ export default function TypingReplayPlayer({
                   background: `linear-gradient(to right, var(--primary-color) 0%, var(--primary-color) ${progressPercent}%, var(--border-color) ${progressPercent}%, var(--border-color) 100%)`,
                 }}
               />
-              {/* タイムライン打鍵ヒートマップトラック */}
-              <div className="replay-heatmap-strip">
-                {typingHistory.map((item, idx) => {
-                  if (item.timeMs > totalDurationMs) return null;
-                  const leftPos = (item.timeMs / totalDurationMs) * 100;
-                  return (
-                    <span
-                      key={idx}
-                      className={`heatmap-dot heatmap-${item.keyType || "text"}`}
-                      style={{ left: `${leftPos}%` }}
-                      title={`${formatTime(item.timeMs)}: ${item.keyType || "文字"}`}
-                    />
-                  );
-                })}
-              </div>
             </div>
 
             <div className="replay-time-display">
@@ -329,8 +332,13 @@ export default function TypingReplayPlayer({
                 title="再生速度の切り替え"
               >
                 <Gauge size={16} />
-                <span>速度: <strong>{playbackSpeed}x</strong></span>
-                <ChevronDown size={14} className={`speed-chevron ${isSpeedMenuOpen ? "open" : ""}`} />
+                <span>
+                  速度: <strong>{playbackSpeed}x</strong>
+                </span>
+                <ChevronDown
+                  size={14}
+                  className={`speed-chevron ${isSpeedMenuOpen ? "open" : ""}`}
+                />
               </button>
 
               {isSpeedMenuOpen && (
@@ -348,7 +356,9 @@ export default function TypingReplayPlayer({
                         }}
                       >
                         {speed}倍速
-                        {playbackSpeed === speed && <span className="speed-check">✓</span>}
+                        {playbackSpeed === speed && (
+                          <span className="speed-check">✓</span>
+                        )}
                       </button>
                     ))}
                   </div>
@@ -359,7 +369,9 @@ export default function TypingReplayPlayer({
 
           {/* 自動入力癖診断インサイト */}
           {habitInsight && (
-            <div className={`habit-diagnosis-box diagnosis-${habitInsight.type}`}>
+            <div
+              className={`habit-diagnosis-box diagnosis-${habitInsight.type}`}
+            >
               <div className="diagnosis-title">
                 {habitInsight.type === "warning" ? (
                   <AlertCircle size={16} />
