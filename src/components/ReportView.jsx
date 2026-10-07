@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,7 +12,7 @@ import {
   Filler,
 } from "chart.js";
 import { Bar, Line } from "react-chartjs-2";
-import { RotateCcw, Save } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import TypingReplayPlayer from "./TypingReplayPlayer";
 
 ChartJS.register(
@@ -28,9 +28,6 @@ ChartJS.register(
 );
 
 export default function ReportView({ resultData, onRestart }) {
-  const [traineeNotes, setTraineeNotes] = useState("");
-  const [staffNotes, setStaffNotes] = useState("");
-
   const targetPaneRef = useRef(null);
   const typedPaneRef = useRef(null);
   const isSyncingScroll = useRef(false);
@@ -45,10 +42,6 @@ export default function ReportView({ resultData, onRestart }) {
     backspaceCount,
     backspaceLogs,
     typingHistory = [],
-    insights,
-    errStart,
-    errMid,
-    errEnd,
   } = resultData;
 
   const handleScroll = (source) => {

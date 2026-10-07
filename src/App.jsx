@@ -6,7 +6,7 @@ import WordToolbar from "./components/WordToolbar";
 import ReportView from "./components/ReportView";
 import { fetchSampleTasks } from "./utils/sampleLoader";
 import { computeTextDiff } from "./utils/diffEngine";
-import { FileText, CheckCircle, RotateCcw } from "lucide-react";
+import { FileText, CheckCircle } from "lucide-react";
 
 export default function App() {
   const [sampleTasks, setSampleTasks] = useState([]);
@@ -157,12 +157,7 @@ export default function App() {
 
   // 【ステップ３】完了＆結果直接表示
   const handleFinishAndCheck = () => {
-    if (!isRunning || elapsedSeconds === 0) {
-      alert(
-        "タイピングが開始されていません。「スタート」を押して入力してください。",
-      );
-      return;
-    }
+    if (!isRunning || elapsedSeconds === 0) return;
 
     setIsRunning(false);
 
@@ -204,7 +199,7 @@ export default function App() {
 
       <main className="main-content">
         {/* 3ステップ進行バー */}
-        <StepBar currentStep={step} onStepClick={setStep} />
+        <StepBar currentStep={step} />
 
         {/* =========================================================
             ステップ１：練習する課題を選択してください

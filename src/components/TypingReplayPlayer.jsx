@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import {
   Play,
   Pause,
-  Film,
-  Activity,
   AlertCircle,
   CheckCircle2,
   RotateCcw,
@@ -86,32 +84,6 @@ export default function TypingReplayPlayer({
     return text;
   };
 
-  // 現在時点での打鍵統計を集計
-  const getCurrentCounts = () => {
-    const counts = {
-      text: 0,
-      backspace: 0,
-      arrow: 0,
-      space: 0,
-      enter: 0,
-      total: 0,
-    };
-    if (!typingHistory || typingHistory.length === 0) return counts;
-
-    for (let i = 0; i < typingHistory.length; i++) {
-      const item = typingHistory[i];
-      if (item.timeMs <= currentTimeMs) {
-        if (item.keyType && counts[item.keyType] !== undefined) {
-          counts[item.keyType]++;
-          counts.total++;
-        }
-      } else {
-        break;
-      }
-    }
-    return counts;
-  };
-
   // 最終時点の全体統計（自動診断用）
   const getFinalCounts = () => {
     const counts = {
@@ -133,7 +105,6 @@ export default function TypingReplayPlayer({
   };
 
   const displayedText = getCurrentText();
-  const currentCounts = getCurrentCounts();
   const finalCounts = getFinalCounts();
 
   // 自動診断メッセージの生成
