@@ -18,7 +18,7 @@ export default function SampleModal({
       <div className="modal-dialog sample-modal-dialog">
         <div className="modal-header">
           <div>
-            <h2>📄 練習テキストの確認</h2>
+            <h2>📄 課題の確認</h2>
           </div>
           <button type="button" className="btn-close" onClick={onClose}>
             ×
