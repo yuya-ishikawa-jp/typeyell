@@ -5,7 +5,7 @@ import SampleModal from "./components/SampleModal";
 import WordToolbar from "./components/WordToolbar";
 import ReportView from "./components/ReportView";
 import { fetchSampleTasks } from "./utils/sampleLoader";
-import { computeTextDiff, generateInsights } from "./utils/diffEngine";
+import { computeTextDiff } from "./utils/diffEngine";
 import { FileText, CheckCircle, RotateCcw } from "lucide-react";
 
 export default function App() {
@@ -175,21 +175,6 @@ export default function App() {
     ];
 
     const diff = computeTextDiff(targetText, typedText);
-    const minutes = elapsedSeconds / 60;
-    const cpm = minutes > 0 ? Math.round(typedText.length / minutes) : 0;
-    const bsRate =
-      typedText.length > 0
-        ? ((backspaceCount / typedText.length) * 100).toFixed(1)
-        : 0;
-
-    const { insights, errStart, errMid, errEnd } = generateInsights(
-      diff,
-      targetText,
-      typedText,
-      cpm,
-      bsRate,
-      backspaceCount,
-    );
 
     const data = {
       task: selectedTask,
@@ -199,10 +184,6 @@ export default function App() {
       backspaceCount,
       backspaceLogs,
       typingHistory: finalHistory,
-      insights,
-      errStart,
-      errMid,
-      errEnd,
     };
 
     setResultData(data);

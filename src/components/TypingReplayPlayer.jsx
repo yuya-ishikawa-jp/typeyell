@@ -78,7 +78,7 @@ export default function TypingReplayPlayer({
     let text = "";
     for (let i = 0; i < typingHistory.length; i++) {
       if (typingHistory[i].timeMs <= currentTimeMs) {
-        text = typingHistory[i].text;
+        text = typingHistory[i].text || "";
       } else {
         break;
       }
