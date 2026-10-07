@@ -25,16 +25,7 @@ export default function SampleModal({
           </button>
         </div>
 
-        <div className="modal-body" id="printable-sample-sheet">
-          {/* 印刷用タイトル（印刷時のみ表示） */}
-          <div className="print-only print-header">
-            <h1>TypeYell タイピング練習課題シート</h1>
-            <div className="print-meta">
-              <span>課題名: {task.title}</span>
-              <span>文字数: {task.content ? task.content.length : 0}文字</span>
-            </div>
-          </div>
-
+        <div className="modal-body">
           <div className="sample-modal-meta">
             <span className="meta-item">
               課題名: <strong>{task.title}</strong>
