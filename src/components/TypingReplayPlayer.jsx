@@ -19,7 +19,7 @@ export default function TypingReplayPlayer({
   const totalDurationMs = Math.max(totalDurationSeconds * 1000, 1000);
   const [currentTimeMs, setCurrentTimeMs] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [playbackSpeed, setPlaybackSpeed] = useState(10); // デフォルト10倍速
+  const [playbackSpeed, setPlaybackSpeed] = useState(1); // デフォルト1倍速
   const [isSpeedMenuOpen, setIsSpeedMenuOpen] = useState(false);
 
   const screenContentRef = useRef(null);

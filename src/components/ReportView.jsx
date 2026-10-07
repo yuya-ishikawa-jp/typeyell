@@ -316,8 +316,8 @@ export default function ReportView({ resultData, onRestart }) {
         <div className="report-view-meta">
           <div className="report-view-date">📅 実施日時: {dateStr}</div>
           <div className="report-view-task">
-            📝 課題: {task?.title || "自由タイピング"}/{"　"}文字数:{" "}
-            {typedText.length}文字
+            📝 課題: {task?.title || "自由タイピング"}（{task?.content?.length}
+            文字）
           </div>
         </div>
       </div>
@@ -337,7 +337,7 @@ export default function ReportView({ resultData, onRestart }) {
                 {mins}:{secs}
               </span>
               {elapsedSeconds >= 60 && (
-                <span className="score-sub">{elapsedSeconds}秒</span>
+                <span className="score-sub">合計{elapsedSeconds}秒</span>
               )}
             </div>
             <div className="score-card accent-blue">
@@ -363,7 +363,7 @@ export default function ReportView({ resultData, onRestart }) {
           {/* グラフ */}
           <div className="charts-grid">
             <div className="chart-card">
-              <h4>📍 お手本の行ごとの誤り発生数（行別エラー分布）</h4>
+              <h4>📍 行ごとの誤り発生数</h4>
               <div className="chart-container">
                 <Bar data={barData} options={barOptions} />
               </div>
@@ -401,6 +401,9 @@ export default function ReportView({ resultData, onRestart }) {
             <div className="diff-pane diff-pane-target">
               <div className="diff-pane-header">
                 <span className="pane-title">📄 正しい文章</span>
+                <span className="pane-char-count">
+                  {task?.content?.length || 0}文字
+                </span>
               </div>
               <div
                 ref={targetPaneRef}
@@ -415,6 +418,7 @@ export default function ReportView({ resultData, onRestart }) {
             <div className="diff-pane diff-pane-typed">
               <div className="diff-pane-header">
                 <span className="pane-title">✍️ 入力された文章</span>
+                <span className="pane-char-count">{typedText.length}文字</span>
               </div>
               <div
                 ref={typedPaneRef}
