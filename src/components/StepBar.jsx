@@ -3,7 +3,7 @@ import { CheckCircle2 } from "lucide-react";
 
 export default function StepBar({ currentStep, onStepClick }) {
   const steps = [
-    { number: 1, title: "ステップ１", desc: "文章の選択" },
+    { number: 1, title: "ステップ１", desc: "課題の選択" },
     { number: 2, title: "ステップ２", desc: "タイピング練習" },
     { number: 3, title: "ステップ３", desc: "結果確認・分析" },
   ];

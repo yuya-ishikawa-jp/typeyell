@@ -207,13 +207,15 @@ export default function App() {
         <StepBar currentStep={step} onStepClick={setStep} />
 
         {/* =========================================================
-            ステップ１：練習する文章を選択してください
+            ステップ１：練習する課題を選択してください
            ========================================================= */}
         {step === 1 && (
           <section className="card step-card">
             <div className="step-header">
-              <span className="step-badge">ステップ 1</span>
-              <h2>練習する文章を選択してください。</h2>
+              <div className="step-header-left">
+                <span className="step-badge">ステップ 1</span>
+                <h2>練習する課題を選択してください。</h2>
+              </div>
             </div>
 
             <div className="step-body">

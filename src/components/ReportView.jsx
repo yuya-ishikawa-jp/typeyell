@@ -316,7 +316,8 @@ export default function ReportView({ resultData, onRestart }) {
         <div className="report-view-meta">
           <div className="report-view-date">📅 実施日時: {dateStr}</div>
           <div className="report-view-task">
-            📝 課題: {task?.title || "自由タイピング"}（{task?.content?.length}
+            📝 課題名: {task?.title || "自由タイピング"}（
+            {task?.content?.length}
             文字）
           </div>
         </div>
