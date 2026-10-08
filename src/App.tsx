@@ -21,7 +21,8 @@ export default function App() {
   const [countdown, setCountdown] = useState<null | number | string>(null);
 
   // モーダル表示状態（見本記憶モーダル）
-  const [isSampleViewModalOpen, setIsSampleViewModalOpen] = useState<boolean>(false);
+  const [isSampleViewModalOpen, setIsSampleViewModalOpen] =
+    useState<boolean>(false);
 
   // タイマー ＆ 入力ステート
   const [isRunning, setIsRunning] = useState<boolean>(false);
@@ -61,7 +62,7 @@ export default function App() {
       timerRef.current = setInterval(() => {
         if (startTimeRef.current !== null) {
           setElapsedSeconds(
-            Math.floor((Date.now() - startTimeRef.current) / 1000)
+            Math.floor((Date.now() - startTimeRef.current) / 1000),
           );
         }
       }, 1000);
@@ -315,7 +316,7 @@ export default function App() {
                     onInput={handleInput}
                     {...({
                       placeholder: isRunning
-                        ? "記憶した文章をここに入力してください..."
+                        ? "文章をここに入力してください..."
                         : "カウントダウン完了後、入力が開始できます...",
                     } as React.HTMLAttributes<HTMLDivElement>)}
                     suppressContentEditableWarning={true}
