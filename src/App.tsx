@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Header from "./components/Header";
 import StepBar from "./components/StepBar";
 import SampleModal from "./components/SampleModal";
@@ -7,34 +7,35 @@ import ReportView from "./components/ReportView";
 import { fetchSampleTasks } from "./utils/sampleLoader";
 import { computeTextDiff } from "./utils/diffEngine";
 import { FileText, CheckCircle } from "lucide-react";
+import { Task, BackspaceLog, TypingHistoryItem, ResultData } from "./types";
 
 export default function App() {
-  const [sampleTasks, setSampleTasks] = useState([]);
-  const [selectedTask, setSelectedTask] = useState(null);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [sampleTasks, setSampleTasks] = useState<Task[]>([]);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
 
   // ステップ状態 (1, 2, 3)
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState<number>(1);
 
   // カウントダウン状態 (null | 3 | 2 | 1 | 'スタート!')
-  const [countdown, setCountdown] = useState(null);
+  const [countdown, setCountdown] = useState<null | number | string>(null);
 
   // モーダル表示状態（見本記憶モーダル）
-  const [isSampleViewModalOpen, setIsSampleViewModalOpen] = useState(false);
+  const [isSampleViewModalOpen, setIsSampleViewModalOpen] = useState<boolean>(false);
 
   // タイマー ＆ 入力ステート
-  const [isRunning, setIsRunning] = useState(false);
-  const [elapsedSeconds, setElapsedSeconds] = useState(0);
-  const [backspaceCount, setBackspaceCount] = useState(0);
-  const [backspaceLogs, setBackspaceLogs] = useState([]);
-  const [typingHistory, setTypingHistory] = useState([]);
+  const [isRunning, setIsRunning] = useState<boolean>(false);
+  const [elapsedSeconds, setElapsedSeconds] = useState<number>(0);
+  const [backspaceCount, setBackspaceCount] = useState<number>(0);
+  const [backspaceLogs, setBackspaceLogs] = useState<BackspaceLog[]>([]);
+  const [typingHistory, setTypingHistory] = useState<TypingHistoryItem[]>([]);
 
   // 分析結果データ
-  const [resultData, setResultData] = useState(null);
+  const [resultData, setResultData] = useState<ResultData | null>(null);
 
-  const editorRef = useRef(null);
-  const timerRef = useRef(null);
-  const startTimeRef = useRef(null);
+  const editorRef = useRef<HTMLDivElement | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const startTimeRef = useRef<number | null>(null);
 
   // マウント時に public/text-samples/ から動的取得
   useEffect(() => {
@@ -58,18 +59,26 @@ export default function App() {
   useEffect(() => {
     if (isRunning) {
       timerRef.current = setInterval(() => {
-        setElapsedSeconds(
-          Math.floor((Date.now() - startTimeRef.current) / 1000),
-        );
+        if (startTimeRef.current !== null) {
+          setElapsedSeconds(
+            Math.floor((Date.now() - startTimeRef.current) / 1000)
+          );
+        }
       }, 1000);
     } else {
-      clearInterval(timerRef.current);
+      if (timerRef.current !== null) {
+        clearInterval(timerRef.current);
+      }
     }
-    return () => clearInterval(timerRef.current);
+    return () => {
+      if (timerRef.current !== null) {
+        clearInterval(timerRef.current);
+      }
+    };
   }, [isRunning]);
 
   // 課題カードの選択ハンドラ
-  const handleSelectTask = (task) => {
+  const handleSelectTask = (task: Task) => {
     setSelectedTask(task);
     resetTrainingState();
     setIsSampleViewModalOpen(true);
@@ -88,7 +97,7 @@ export default function App() {
   };
 
   // プレーンテキスト抽出
-  const getPlainText = () => {
+  const getPlainText = (): string => {
     if (!editorRef.current) return "";
     return editorRef.current.innerText || editorRef.current.textContent || "";
   };
@@ -126,7 +135,9 @@ export default function App() {
     if (editorRef.current) {
       editorRef.current.innerHTML = "";
       setTimeout(() => {
-        editorRef.current.focus();
+        if (editorRef.current) {
+          editorRef.current.focus();
+        }
       }, 50);
     }
   };
@@ -140,7 +151,7 @@ export default function App() {
   };
 
   // キー入力ハンドラ
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (!isRunning) {
       if (e.key !== "Tab") e.preventDefault();
       return;
@@ -157,21 +168,21 @@ export default function App() {
 
   // 【ステップ３】完了＆結果直接表示
   const handleFinishAndCheck = () => {
-    if (!isRunning || elapsedSeconds === 0) return;
+    if (!isRunning || elapsedSeconds === 0 || !startTimeRef.current) return;
 
     setIsRunning(false);
 
     const typedText = getPlainText();
     const targetText = selectedTask ? selectedTask.content : "";
     const finalTimeMs = Date.now() - startTimeRef.current;
-    const finalHistory = [
+    const finalHistory: TypingHistoryItem[] = [
       ...typingHistory,
       { timeMs: finalTimeMs, text: typedText },
     ];
 
     const diff = computeTextDiff(targetText, typedText);
 
-    const data = {
+    const data: ResultData = {
       task: selectedTask,
       diff,
       elapsedSeconds,
@@ -302,11 +313,11 @@ export default function App() {
                     contentEditable={isRunning}
                     onKeyDown={handleKeyDown}
                     onInput={handleInput}
-                    placeholder={
-                      isRunning
+                    {...({
+                      placeholder: isRunning
                         ? "記憶した文章をここに入力してください..."
-                        : "カウントダウン完了後、入力が開始できます..."
-                    }
+                        : "カウントダウン完了後、入力が開始できます...",
+                    } as React.HTMLAttributes<HTMLDivElement>)}
                     suppressContentEditableWarning={true}
                   ></div>
 

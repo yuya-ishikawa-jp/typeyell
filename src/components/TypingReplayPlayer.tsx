@@ -9,25 +9,29 @@ import {
   Gauge,
   ChevronDown,
 } from "lucide-react";
+import { TypingReplayPlayerProps, HabitDiagnosis } from "../types";
 
 export default function TypingReplayPlayer({
   typingHistory = [],
   totalDurationSeconds = 0,
-}) {
+}: TypingReplayPlayerProps) {
   const totalDurationMs = Math.max(totalDurationSeconds * 1000, 1000);
-  const [currentTimeMs, setCurrentTimeMs] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [playbackSpeed, setPlaybackSpeed] = useState(1); // デフォルト1倍速
-  const [isSpeedMenuOpen, setIsSpeedMenuOpen] = useState(false);
+  const [currentTimeMs, setCurrentTimeMs] = useState<number>(0);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
+  const [isSpeedMenuOpen, setIsSpeedMenuOpen] = useState<boolean>(false);
 
-  const screenContentRef = useRef(null);
-  const speedMenuRef = useRef(null);
+  const screenContentRef = useRef<HTMLDivElement | null>(null);
+  const speedMenuRef = useRef<HTMLDivElement | null>(null);
   const speedOptions = [1, 2, 5, 10, 20, 30];
 
   // メニュー外クリック時に速度メニューを閉じる
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (speedMenuRef.current && !speedMenuRef.current.contains(e.target)) {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        speedMenuRef.current &&
+        !speedMenuRef.current.contains(e.target as Node)
+      ) {
         setIsSpeedMenuOpen(false);
       }
     };
@@ -37,7 +41,7 @@ export default function TypingReplayPlayer({
 
   // 再生ループ (requestAnimationFrame)
   useEffect(() => {
-    let animationFrameId;
+    let animationFrameId: number;
     let lastRealTime = Date.now();
 
     const tick = () => {
@@ -70,7 +74,7 @@ export default function TypingReplayPlayer({
   }, [isPlaying, playbackSpeed, totalDurationMs]);
 
   // 現在のタイムスタンプ時点のテキストを取得
-  const getCurrentText = () => {
+  const getCurrentText = (): string => {
     if (!typingHistory || typingHistory.length === 0) return "";
 
     let text = "";
@@ -108,7 +112,7 @@ export default function TypingReplayPlayer({
   const finalCounts = getFinalCounts();
 
   // 自動診断メッセージの生成
-  const getHabitDiagnosis = () => {
+  const getHabitDiagnosis = (): HabitDiagnosis | null => {
     if (finalCounts.total === 0) return null;
 
     const arrowRatio = finalCounts.arrow / finalCounts.total;
@@ -179,13 +183,13 @@ export default function TypingReplayPlayer({
   };
 
   // シークバー操作
-  const handleSeek = (e) => {
+  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     const seekValue = Number(e.target.value);
     setCurrentTimeMs(seekValue);
   };
 
   // 時間フォーマット mm:ss
-  const formatTime = (ms) => {
+  const formatTime = (ms: number): string => {
     const totalSecs = Math.floor(ms / 1000);
     const mins = String(Math.floor(totalSecs / 60)).padStart(2, "0");
     const secs = String(totalSecs % 60).padStart(2, "0");

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,10 +10,12 @@ import {
   Tooltip,
   Legend,
   Filler,
+  ChartOptions,
 } from "chart.js";
 import { Bar, Line } from "react-chartjs-2";
 import { RotateCcw } from "lucide-react";
 import TypingReplayPlayer from "./TypingReplayPlayer";
+import { ReportViewProps, AlignmentItem } from "../types";
 
 ChartJS.register(
   CategoryScale,
@@ -27,10 +29,10 @@ ChartJS.register(
   Filler,
 );
 
-export default function ReportView({ resultData, onRestart }) {
-  const targetPaneRef = useRef(null);
-  const typedPaneRef = useRef(null);
-  const isSyncingScroll = useRef(false);
+export default function ReportView({ resultData, onRestart }: ReportViewProps) {
+  const targetPaneRef = useRef<HTMLDivElement | null>(null);
+  const typedPaneRef = useRef<HTMLDivElement | null>(null);
+  const isSyncingScroll = useRef<boolean>(false);
 
   if (!resultData) return null;
 
@@ -44,7 +46,7 @@ export default function ReportView({ resultData, onRestart }) {
     typingHistory = [],
   } = resultData;
 
-  const handleScroll = (source) => {
+  const handleScroll = (source: "target" | "typed") => {
     if (isSyncingScroll.current) return;
     isSyncingScroll.current = true;
 
@@ -63,8 +65,8 @@ export default function ReportView({ resultData, onRestart }) {
     }, 50);
   };
 
-  const getAlignmentLines = (alignment) => {
-    const lines = [[]];
+  const getAlignmentLines = (alignment: AlignmentItem[]): AlignmentItem[][] => {
+    const lines: AlignmentItem[][] = [[]];
     alignment.forEach((item) => {
       lines[lines.length - 1].push(item);
       const isBreak =
@@ -255,7 +257,7 @@ export default function ReportView({ resultData, onRestart }) {
     ],
   };
 
-  const barOptions = {
+  const barOptions: ChartOptions<"bar"> = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: { legend: { display: false } },
@@ -266,8 +268,8 @@ export default function ReportView({ resultData, onRestart }) {
   const bucketSize = 10;
   const maxSec = Math.max(elapsedSeconds, 10);
   const bucketCount = Math.ceil(maxSec / bucketSize);
-  const lineLabels = [];
-  const bsData = Array(bucketCount).fill(0);
+  const lineLabels: string[] = [];
+  const bsData: number[] = Array(bucketCount).fill(0);
 
   for (let b = 0; b < bucketCount; b++) {
     lineLabels.push(`${b * bucketSize}秒〜`);
@@ -296,7 +298,7 @@ export default function ReportView({ resultData, onRestart }) {
     ],
   };
 
-  const lineOptions = {
+  const lineOptions: ChartOptions<"line"> = {
     responsive: true,
     maintainAspectRatio: false,
     scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },

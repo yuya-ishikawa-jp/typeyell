@@ -1,7 +1,7 @@
-import React from "react";
 import { Sun, Moon } from "lucide-react";
+import { HeaderProps } from "../types";
 
-export default function Header({ isDarkMode, setIsDarkMode }) {
+export default function Header({ isDarkMode, setIsDarkMode }: HeaderProps) {
   return (
     <header className="app-header">
       <div className="header-container">

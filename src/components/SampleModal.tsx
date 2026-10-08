@@ -1,12 +1,12 @@
-import React from "react";
 import { Printer, Play } from "lucide-react";
+import { SampleModalProps } from "../types";
 
 export default function SampleModal({
   isOpen,
   onClose,
   onProceedToStep2,
   task,
-}) {
+}: SampleModalProps) {
   if (!isOpen || !task) return null;
 
   const handlePrint = () => {

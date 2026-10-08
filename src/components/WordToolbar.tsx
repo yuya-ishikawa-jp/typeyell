@@ -1,8 +1,8 @@
-import React from "react";
+import { WordToolbarProps } from "../types";
 
-export default function WordToolbar({ editorRef }) {
-  const execCmd = (cmd, arg = null) => {
-    document.execCommand(cmd, false, arg);
+export default function WordToolbar({ editorRef }: WordToolbarProps) {
+  const execCmd = (cmd: string, arg: string | null = null) => {
+    document.execCommand(cmd, false, arg ?? undefined);
     if (editorRef.current) {
       editorRef.current.focus();
     }

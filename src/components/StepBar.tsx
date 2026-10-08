@@ -1,7 +1,7 @@
-import React from "react";
 import { CheckCircle2 } from "lucide-react";
+import { StepBarProps } from "../types";
 
-export default function StepBar({ currentStep }) {
+export default function StepBar({ currentStep }: StepBarProps) {
   const steps = [
     { number: 1, title: "ステップ１", desc: "課題の選択" },
     { number: 2, title: "ステップ２", desc: "タイピング練習" },
